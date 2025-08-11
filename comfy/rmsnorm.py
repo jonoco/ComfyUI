@@ -1,5 +1,5 @@
 import torch
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 import numbers
 
 RMSNorm = None
@@ -16,13 +16,13 @@ def rms_norm(x, weight=None, eps=1e-6):
         if weight is None:
             return rms_norm_torch(x, (x.shape[-1],), eps=eps)
         else:
-            return rms_norm_torch(x, weight.shape, weight=comfy.model_management.cast_to(weight, dtype=x.dtype, device=x.device), eps=eps)
+            return rms_norm_torch(x, weight.shape, weight=vgs.submodules.comfyui.comfy.model_management.cast_to(weight, dtype=x.dtype, device=x.device), eps=eps)
     else:
         r = x * torch.rsqrt(torch.mean(x**2, dim=-1, keepdim=True) + eps)
         if weight is None:
             return r
         else:
-            return r * comfy.model_management.cast_to(weight, dtype=x.dtype, device=x.device)
+            return r * vgs.submodules.comfyui.comfy.model_management.cast_to(weight, dtype=x.dtype, device=x.device)
 
 
 if RMSNorm is None:

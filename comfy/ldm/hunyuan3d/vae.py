@@ -13,8 +13,8 @@ from einops import repeat, rearrange
 from tqdm import tqdm
 import logging
 
-import comfy.ops
-ops = comfy.ops.disable_weight_init
+import vgs.submodules.comfyui.comfy.ops
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 def generate_dense_grid_points(
     bbox_min: np.ndarray,

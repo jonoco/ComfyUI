@@ -1,7 +1,7 @@
 import torch
 from torch import nn
-import comfy.ldm.modules.attention
-import comfy.ldm.common_dit
+import vgs.submodules.comfyui.comfy.ldm.modules.attention
+import vgs.submodules.comfyui.comfy.ldm.common_dit
 from einops import rearrange
 import math
 from typing import Dict, Optional, Tuple
@@ -284,9 +284,9 @@ class CrossAttention(nn.Module):
             k = apply_rotary_emb(k, pe)
 
         if mask is None:
-            out = comfy.ldm.modules.attention.optimized_attention(q, k, v, self.heads, attn_precision=self.attn_precision)
+            out = vgs.submodules.comfyui.comfy.ldm.modules.attention.optimized_attention(q, k, v, self.heads, attn_precision=self.attn_precision)
         else:
-            out = comfy.ldm.modules.attention.optimized_attention_masked(q, k, v, self.heads, mask, attn_precision=self.attn_precision)
+            out = vgs.submodules.comfyui.comfy.ldm.modules.attention.optimized_attention_masked(q, k, v, self.heads, mask, attn_precision=self.attn_precision)
         return self.to_out(out)
 
 
@@ -309,7 +309,7 @@ class BasicTransformerBlock(nn.Module):
 
         x += self.attn2(x, context=context, mask=attention_mask)
 
-        y = comfy.ldm.common_dit.rms_norm(x) * (1 + scale_mlp) + shift_mlp
+        y = vgs.submodules.comfyui.comfy.ldm.common_dit.rms_norm(x) * (1 + scale_mlp) + shift_mlp
         x += self.ff(y) * gate_mlp
 
         return x

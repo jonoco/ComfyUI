@@ -1,6 +1,6 @@
-from comfy.cldm.control_types import UNION_CONTROLNET_TYPES
+from vgs.submodules.comfyui.comfy.cldm.control_types import UNION_CONTROLNET_TYPES
 import nodes
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 
 class SetUnionControlNetType:
     @classmethod
@@ -46,7 +46,7 @@ class ControlNetInpaintingAliMamaApply(nodes.ControlNetApplyAdvanced):
         extra_concat = []
         if control_net.concat_mask:
             mask = 1.0 - mask.reshape((-1, 1, mask.shape[-2], mask.shape[-1]))
-            mask_apply = comfy.utils.common_upscale(mask, image.shape[2], image.shape[1], "bilinear", "center").round()
+            mask_apply = vgs.submodules.comfyui.comfy.utils.common_upscale(mask, image.shape[2], image.shape[1], "bilinear", "center").round()
             image = image * mask_apply.movedim(1, -1).repeat(1, 1, 1, image.shape[3])
             extra_concat = [mask]
 

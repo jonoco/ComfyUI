@@ -1,5 +1,5 @@
 import torch
-import comfy.model_management as mm
+import vgs.submodules.comfyui.comfy.model_management as mm
 
 class LotusConditioning:
     @classmethod

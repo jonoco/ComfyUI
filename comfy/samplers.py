@@ -3,19 +3,19 @@ from .k_diffusion import sampling as k_diffusion_sampling
 from .extra_samplers import uni_pc
 from typing import TYPE_CHECKING, Callable, NamedTuple
 if TYPE_CHECKING:
-    from comfy.model_patcher import ModelPatcher
-    from comfy.model_base import BaseModel
-    from comfy.controlnet import ControlBase
+    from vgs.submodules.comfyui.comfy.model_patcher import ModelPatcher
+    from vgs.submodules.comfyui.comfy.model_base import BaseModel
+    from vgs.submodules.comfyui.comfy.controlnet import ControlBase
 import torch
 from functools import partial
 import collections
 from comfy import model_management
 import math
 import logging
-import comfy.sampler_helpers
-import comfy.model_patcher
-import comfy.patcher_extension
-import comfy.hooks
+import vgs.submodules.comfyui.comfy.sampler_helpers
+import vgs.submodules.comfyui.comfy.model_patcher
+import vgs.submodules.comfyui.comfy.patcher_extension
+import vgs.submodules.comfyui.comfy.hooks
 import scipy.stats
 import numpy
 
@@ -199,9 +199,9 @@ def finalize_default_conds(model: 'BaseModel', hooked_to_run: dict[comfy.hooks.H
             hooked_to_run[p.hooks] += [(p, i)]
 
 def calc_cond_batch(model: 'BaseModel', conds: list[list[dict]], x_in: torch.Tensor, timestep, model_options):
-    executor = comfy.patcher_extension.WrapperExecutor.new_executor(
+    executor = vgs.submodules.comfyui.comfy.patcher_extension.WrapperExecutor.new_executor(
         _calc_cond_batch,
-        comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.CALC_COND_BATCH, model_options, is_model_options=True)
+        vgs.submodules.comfyui.comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.CALC_COND_BATCH, model_options, is_model_options=True)
     )
     return executor.execute(model, conds, x_in, timestep, model_options)
 
@@ -293,7 +293,7 @@ def _calc_cond_batch(model: 'BaseModel', conds: list[list[dict]], x_in: torch.Te
 
             transformer_options = model.current_patcher.apply_hooks(hooks=hooks)
             if 'transformer_options' in model_options:
-                transformer_options = comfy.patcher_extension.merge_nested_dicts(transformer_options,
+                transformer_options = vgs.submodules.comfyui.comfy.patcher_extension.merge_nested_dicts(transformer_options,
                                                                                  model_options['transformer_options'],
                                                                                  copy_dict1=False)
 
@@ -346,7 +346,7 @@ def _calc_cond_batch(model: 'BaseModel', conds: list[list[dict]], x_in: torch.Te
     return out_conds
 
 def calc_cond_uncond_batch(model, cond, uncond, x_in, timestep, model_options): #TODO: remove
-    logging.warning("WARNING: The comfy.samplers.calc_cond_uncond_batch function is deprecated please use the calc_cond_batch one instead.")
+    logging.warning("WARNING: The vgs.submodules.comfyui.comfy.samplers.calc_cond_uncond_batch function is deprecated please use the calc_cond_batch one instead.")
     return tuple(calc_cond_batch(model, [cond, uncond], x_in, timestep, model_options))
 
 def cfg_function(model, cond_pred, uncond_pred, cond_scale, x, timestep, model_options={}, cond=None, uncond=None):
@@ -566,7 +566,7 @@ def resolve_areas_and_cond_masks_multidim(conditions, dims, device):
             conditions[i] = modified
 
 def resolve_areas_and_cond_masks(conditions, h, w, device):
-    logging.warning("WARNING: The comfy.samplers.resolve_areas_and_cond_masks function is deprecated please use the resolve_areas_and_cond_masks_multidim one instead.")
+    logging.warning("WARNING: The vgs.submodules.comfyui.comfy.samplers.resolve_areas_and_cond_masks function is deprecated please use the resolve_areas_and_cond_masks_multidim one instead.")
     return resolve_areas_and_cond_masks_multidim(conditions, [h, w], device)
 
 def create_cond_with_same_area_if_none(conds, c):
@@ -818,14 +818,14 @@ def process_conds(model, noise, conds, device, latent_image=None, denoise_mask=N
 
 def preprocess_conds_hooks(conds: dict[str, list[dict[str]]]):
     # determine which ControlNets have extra_hooks that should be combined with normal hooks
-    hook_replacement: dict[tuple[ControlBase, comfy.hooks.HookGroup], list[dict]] = {}
+    hook_replacement: dict[tuple[ControlBase, vgs.submodules.comfyui.comfy.hooks.HookGroup], list[dict]] = {}
     for k in conds:
         for kk in conds[k]:
             if 'control' in kk:
                 control: 'ControlBase' = kk['control']
                 extra_hooks = control.get_extra_hooks()
                 if len(extra_hooks) > 0:
-                    hooks: comfy.hooks.HookGroup = kk.get('hooks', None)
+                    hooks: vgs.submodules.comfyui.comfy.hooks.HookGroup = kk.get('hooks', None)
                     to_replace = hook_replacement.setdefault((control, hooks), [])
                     to_replace.append(kk)
     # if nothing to replace, do nothing
@@ -837,7 +837,7 @@ def preprocess_conds_hooks(conds: dict[str, list[dict[str]]]):
     for key, conds_to_modify in hook_replacement.items():
         control = key[0]
         hooks = key[1]
-        hooks = comfy.hooks.HookGroup.combine_all_hooks(control.get_extra_hooks() + [hooks])
+        hooks = vgs.submodules.comfyui.comfy.hooks.HookGroup.combine_all_hooks(control.get_extra_hooks() + [hooks])
         # if combined hooks are not None, set as new hooks for all relevant conds
         if hooks is not None:
             for cond in conds_to_modify:
@@ -846,7 +846,7 @@ def preprocess_conds_hooks(conds: dict[str, list[dict[str]]]):
 def filter_registered_hooks_on_conds(conds: dict[str, list[dict[str]]], model_options: dict[str]):
     '''Modify 'hooks' on conds so that only hooks that were registered remain. Properly accounts for
     HookGroups that have the same reference.'''
-    registered: comfy.hooks.HookGroup = model_options.get('registered_hooks', None)
+    registered: vgs.submodules.comfyui.comfy.hooks.HookGroup = model_options.get('registered_hooks', None)
     # if None were registered, make sure all hooks are cleaned from conds
     if registered is None:
         for k in conds:
@@ -857,7 +857,7 @@ def filter_registered_hooks_on_conds(conds: dict[str, list[dict[str]]], model_op
     hook_replacement: dict[comfy.hooks.HookGroup, list[dict]] = {}
     for k in conds:
         for kk in conds[k]:
-            hooks: comfy.hooks.HookGroup = kk.get('hooks', None)
+            hooks: vgs.submodules.comfyui.comfy.hooks.HookGroup = kk.get('hooks', None)
             if hooks is not None:
                 if not hooks.is_subset_of(registered):
                     to_replace = hook_replacement.setdefault(hooks, [])
@@ -943,7 +943,7 @@ class CFGGuider:
 
     def inner_set_conds(self, conds):
         for k in conds:
-            self.original_conds[k] = comfy.sampler_helpers.convert_cond(conds[k])
+            self.original_conds[k] = vgs.submodules.comfyui.comfy.sampler_helpers.convert_cond(conds[k])
 
     def __call__(self, *args, **kwargs):
         return self.predict_noise(*args, **kwargs)
@@ -957,24 +957,24 @@ class CFGGuider:
 
         self.conds = process_conds(self.inner_model, noise, self.conds, device, latent_image, denoise_mask, seed)
 
-        extra_model_options = comfy.model_patcher.create_model_options_clone(self.model_options)
+        extra_model_options = vgs.submodules.comfyui.comfy.model_patcher.create_model_options_clone(self.model_options)
         extra_model_options.setdefault("transformer_options", {})["sample_sigmas"] = sigmas
         extra_args = {"model_options": extra_model_options, "seed": seed}
 
-        executor = comfy.patcher_extension.WrapperExecutor.new_class_executor(
+        executor = vgs.submodules.comfyui.comfy.patcher_extension.WrapperExecutor.new_class_executor(
             sampler.sample,
             sampler,
-            comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.SAMPLER_SAMPLE, extra_args["model_options"], is_model_options=True)
+            vgs.submodules.comfyui.comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.SAMPLER_SAMPLE, extra_args["model_options"], is_model_options=True)
         )
         samples = executor.execute(self, sigmas, extra_args, callback, noise, latent_image, denoise_mask, disable_pbar)
         return self.inner_model.process_latent_out(samples.to(torch.float32))
 
     def outer_sample(self, noise, latent_image, sampler, sigmas, denoise_mask=None, callback=None, disable_pbar=False, seed=None):
-        self.inner_model, self.conds, self.loaded_models = comfy.sampler_helpers.prepare_sampling(self.model_patcher, noise.shape, self.conds, self.model_options)
+        self.inner_model, self.conds, self.loaded_models = vgs.submodules.comfyui.comfy.sampler_helpers.prepare_sampling(self.model_patcher, noise.shape, self.conds, self.model_options)
         device = self.model_patcher.load_device
 
         if denoise_mask is not None:
-            denoise_mask = comfy.sampler_helpers.prepare_mask(denoise_mask, noise.shape, device)
+            denoise_mask = vgs.submodules.comfyui.comfy.sampler_helpers.prepare_mask(denoise_mask, noise.shape, device)
 
         noise = noise.to(device)
         latent_image = latent_image.to(device)
@@ -987,7 +987,7 @@ class CFGGuider:
         finally:
             self.model_patcher.cleanup()
 
-        comfy.sampler_helpers.cleanup_models(self.conds, self.loaded_models)
+        vgs.submodules.comfyui.comfy.sampler_helpers.cleanup_models(self.conds, self.loaded_models)
         del self.inner_model
         del self.loaded_models
         return output
@@ -1003,17 +1003,17 @@ class CFGGuider:
 
         try:
             orig_model_options = self.model_options
-            self.model_options = comfy.model_patcher.create_model_options_clone(self.model_options)
+            self.model_options = vgs.submodules.comfyui.comfy.model_patcher.create_model_options_clone(self.model_options)
             # if one hook type (or just None), then don't bother caching weights for hooks (will never change after first step)
             orig_hook_mode = self.model_patcher.hook_mode
             if get_total_hook_groups_in_conds(self.conds) <= 1:
-                self.model_patcher.hook_mode = comfy.hooks.EnumHookMode.MinVram
-            comfy.sampler_helpers.prepare_model_patcher(self.model_patcher, self.conds, self.model_options)
+                self.model_patcher.hook_mode = vgs.submodules.comfyui.comfy.hooks.EnumHookMode.MinVram
+            vgs.submodules.comfyui.comfy.sampler_helpers.prepare_model_patcher(self.model_patcher, self.conds, self.model_options)
             filter_registered_hooks_on_conds(self.conds, self.model_options)
-            executor = comfy.patcher_extension.WrapperExecutor.new_class_executor(
+            executor = vgs.submodules.comfyui.comfy.patcher_extension.WrapperExecutor.new_class_executor(
                 self.outer_sample,
                 self,
-                comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.OUTER_SAMPLE, self.model_options, is_model_options=True)
+                vgs.submodules.comfyui.comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.OUTER_SAMPLE, self.model_options, is_model_options=True)
             )
             output = executor.execute(noise, latent_image, sampler, sigmas, denoise_mask, callback, disable_pbar, seed)
         finally:

@@ -1,8 +1,8 @@
 import torch
 from torch import Tensor, nn
 
-from comfy.ldm.flux.math import attention
-from comfy.ldm.flux.layers import (
+from vgs.submodules.comfyui.comfy.ldm.flux.math import attention
+from vgs.submodules.comfyui.comfy.ldm.flux.layers import (
     MLPEmbedder,
     RMSNorm,
     QKNorm,

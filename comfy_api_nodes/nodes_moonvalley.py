@@ -30,7 +30,7 @@ from comfy_api_nodes.apinode_utils import (
 from comfy_api_nodes.mapper_utils import model_field_to_node_input
 
 from comfy_api.input.video_types import VideoInput
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 from comfy_api.input_impl import VideoFromFile
 import av
 import io

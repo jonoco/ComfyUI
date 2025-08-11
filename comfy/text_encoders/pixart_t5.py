@@ -1,9 +1,9 @@
 import os
 
 from comfy import sd1_clip
-import comfy.text_encoders.t5
-import comfy.text_encoders.sd3_clip
-from comfy.sd1_clip import gen_empty_tokens
+import vgs.submodules.comfyui.comfy.text_encoders.t5
+import vgs.submodules.comfyui.comfy.text_encoders.sd3_clip
+from vgs.submodules.comfyui.comfy.sd1_clip import gen_empty_tokens
 
 from transformers import T5TokenizerFast
 

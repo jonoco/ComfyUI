@@ -1,12 +1,12 @@
 from __future__ import annotations
 import torch
 
-import comfy.utils
-from comfy.patcher_extension import WrappersMP
+import vgs.submodules.comfyui.comfy.utils
+from vgs.submodules.comfyui.comfy.patcher_extension import WrappersMP
 from typing import TYPE_CHECKING, Callable, Optional
 if TYPE_CHECKING:
-    from comfy.model_patcher import ModelPatcher
-    from comfy.patcher_extension import WrapperExecutor
+    from vgs.submodules.comfyui.comfy.model_patcher import ModelPatcher
+    from vgs.submodules.comfyui.comfy.patcher_extension import WrapperExecutor
 
 
 COMPILE_KEY = "torch.compile"
@@ -21,12 +21,12 @@ def apply_torch_compile_factory(compiled_module_dict: dict[str, Callable]) -> Ca
         try:
             orig_modules = {}
             for key, value in compiled_module_dict.items():
-                orig_modules[key] = comfy.utils.get_attr(executor.class_obj, key)
-                comfy.utils.set_attr(executor.class_obj, key, value)
+                orig_modules[key] = vgs.submodules.comfyui.comfy.utils.get_attr(executor.class_obj, key)
+                vgs.submodules.comfyui.comfy.utils.set_attr(executor.class_obj, key, value)
             return executor(*args, **kwargs)
         finally:
             for key, value in orig_modules.items():
-                comfy.utils.set_attr(executor.class_obj, key, value)
+                vgs.submodules.comfyui.comfy.utils.set_attr(executor.class_obj, key, value)
     return apply_torch_compile_wrapper
 
 

@@ -3,10 +3,10 @@ import os
 import json
 import struct
 import numpy as np
-from comfy.ldm.modules.diffusionmodules.mmdit import get_1d_sincos_pos_embed_from_grid_torch
+from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit import get_1d_sincos_pos_embed_from_grid_torch
 import folder_paths
-import comfy.model_management
-from comfy.cli_args import args
+import vgs.submodules.comfyui.comfy.model_management
+from vgs.submodules.comfyui.comfy.cli_args import args
 
 
 class EmptyLatentHunyuan3Dv2:
@@ -21,7 +21,7 @@ class EmptyLatentHunyuan3Dv2:
     CATEGORY = "latent/3d"
 
     def generate(self, resolution, batch_size):
-        latent = torch.zeros([batch_size, 64, resolution], device=comfy.model_management.intermediate_device())
+        latent = torch.zeros([batch_size, 64, resolution], device=vgs.submodules.comfyui.comfy.model_management.intermediate_device())
         return ({"samples": latent, "type": "hunyuan3dv2"}, )
 
 
@@ -257,7 +257,7 @@ def voxel_to_mesh_surfnet(voxels, threshold=0.5, device=None):
     ], device=device)
 
     cell_vertices = {}
-    progress = comfy.utils.ProgressBar(100)
+    progress = vgs.submodules.comfyui.comfy.utils.ProgressBar(100)
 
     for edge_idx, (e1, e2) in enumerate(edges):
         progress.update(1)

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import torch
 from torch import Tensor, nn
 from einops import rearrange, repeat
-import comfy.ldm.common_dit
+import vgs.submodules.comfyui.comfy.ldm.common_dit
 
 from .layers import (
     DoubleStreamBlock,
@@ -198,7 +198,7 @@ class Flux(nn.Module):
     def process_img(self, x, index=0, h_offset=0, w_offset=0):
         bs, c, h, w = x.shape
         patch_size = self.patch_size
-        x = comfy.ldm.common_dit.pad_to_patch_size(x, (patch_size, patch_size))
+        x = vgs.submodules.comfyui.comfy.ldm.common_dit.pad_to_patch_size(x, (patch_size, patch_size))
 
         img = rearrange(x, "b c (h ph) (w pw) -> b (h w) (c ph pw)", ph=patch_size, pw=patch_size)
         h_len = ((h + (patch_size // 2)) // patch_size)

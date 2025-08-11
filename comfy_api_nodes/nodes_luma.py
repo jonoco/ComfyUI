@@ -1,7 +1,7 @@
 from __future__ import annotations
 from inspect import cleandoc
 from typing import Optional
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
 from comfy_api.input_impl.video_types import VideoFromFile
 from comfy_api_nodes.apis.luma_api import (
     LumaImageModel,

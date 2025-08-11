@@ -12,7 +12,7 @@ from typing import Optional, Literal
 import torch
 
 import folder_paths
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 from server import PromptServer
 from comfy_api_nodes.apis import (
     GeminiContent,

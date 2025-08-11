@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sys
 
-from comfy.comfy_types.node_typing import ComfyNodeABC, InputTypeDict, IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import ComfyNodeABC, InputTypeDict, IO
 
 
 class String(ComfyNodeABC):

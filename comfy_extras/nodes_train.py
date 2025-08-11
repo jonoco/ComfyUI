@@ -11,16 +11,16 @@ from PIL.PngImagePlugin import PngInfo
 import torch.utils.checkpoint
 import tqdm
 
-import comfy.samplers
-import comfy.sd
-import comfy.utils
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.samplers
+import vgs.submodules.comfyui.comfy.sd
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
 import comfy_extras.nodes_custom_sampler
 import folder_paths
 import node_helpers
-from comfy.cli_args import args
-from comfy.comfy_types.node_typing import IO
-from comfy.weight_adapter import adapters, adapter_maps
+from vgs.submodules.comfyui.comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.weight_adapter import adapters, adapter_maps
 
 
 def make_batch_extra_option_dict(d, indicies, full_size=None):
@@ -53,7 +53,7 @@ class TrainSampler(vgs.submodules.comfyui.comfy.samplers.Sampler):
         cond = model_wrap.conds["positive"]
         dataset_size = sigmas.size(0)
         torch.cuda.empty_cache()
-        for i in (pbar:=tqdm.trange(self.total_steps, desc="Training LoRA", smoothing=0.01, disable=not comfy.utils.PROGRESS_BAR_ENABLED)):
+        for i in (pbar:=tqdm.trange(self.total_steps, desc="Training LoRA", smoothing=0.01, disable=not vgs.submodules.comfyui.comfy.utils.PROGRESS_BAR_ENABLED)):
             noisegen = comfy_extras.nodes_custom_sampler.Noise_RandomNoise(self.seed + i * 1000)
             indicies = torch.randperm(dataset_size)[:self.batch_size].tolist()
 
@@ -563,7 +563,7 @@ class TrainLoraNode:
                 # Extract steps from filename like "trained_lora_10_steps_20250225_203716"
                 existing_steps = int(existing_lora.split("_steps_")[0].split("_")[-1])
                 if lora_path:
-                    existing_weights = comfy.utils.load_torch_file(lora_path)
+                    existing_weights = vgs.submodules.comfyui.comfy.utils.load_torch_file(lora_path)
 
             all_weight_adapters = []
             for n, m in mp.model.named_modules():
@@ -642,7 +642,7 @@ class TrainLoraNode:
                 for m in find_all_highest_child_module_with_forward(mp.model.diffusion_model):
                     patch(m)
             mp.model.requires_grad_(False)
-            comfy.model_management.load_models_gpu([mp], memory_required=1e20, force_full_load=True)
+           vgs.submodules.comfyui.comfy.model_management.load_models_gpu([mp], memory_required=1e20, force_full_load=True)
 
             # Setup sampler and guider like in test script
             loss_map = {"loss": []}
@@ -713,7 +713,7 @@ class LoraModelLoader:
         if strength_model == 0:
             return (model, )
 
-        model_lora, _ = comfy.sd.load_lora_for_models(model, None, lora, strength_model, 0)
+        model_lora, _ = vgs.submodules.comfyui.comfy.sd.load_lora_for_models(model, None, lora, strength_model, 0)
         return (model_lora, )
 
 

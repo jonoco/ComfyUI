@@ -14,7 +14,7 @@ from comfy_api.latest._ui import _UI as ui  #noqa: F401
 from comfy_execution.utils import get_executing_context
 from comfy_execution.progress import get_progress_state, PreviewImageTuple
 from PIL import Image
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 import numpy as np
 
 
@@ -37,7 +37,7 @@ class ComfyAPI_latest(ComfyAPIBase):
             This function allows custom nodes and API calls to report their progress
             back to the user interface, providing visual feedback during long operations.
 
-            Migration from previous API: comfy.utils.PROGRESS_BAR_HOOK
+            Migration from previous API: vgs.submodules.comfyui.comfy.utils.PROGRESS_BAR_HOOK
             """
             executing_context = get_executing_context()
             if node_id is None and executing_context is not None:

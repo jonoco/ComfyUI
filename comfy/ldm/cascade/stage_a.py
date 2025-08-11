@@ -19,9 +19,9 @@
 import torch
 from torch import nn
 from torch.autograd import Function
-import comfy.ops
+import vgs.submodules.comfyui.comfy.ops
 
-ops = comfy.ops.disable_weight_init
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 
 class vector_quantize(Function):

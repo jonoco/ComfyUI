@@ -74,7 +74,7 @@ from comfy_api_nodes.util.validation_utils import (
 from comfy_api.input.basic_types import AudioInput
 from comfy_api.input.video_types import VideoInput
 from comfy_api.input_impl import VideoFromFile
-from comfy.comfy_types.node_typing import IO, InputTypeOptions, ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, InputTypeOptions, ComfyNodeABC
 
 KLING_API_VERSION = "v1"
 PATH_TEXT_TO_VIDEO = f"/proxy/kling/{KLING_API_VERSION}/videos/text2video"

@@ -1,5 +1,5 @@
 import torch
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 
 from kornia.morphology import dilation, erosion, opening, closing, gradient, top_hat, bottom_hat
 import kornia.color
@@ -19,7 +19,7 @@ class Morphology:
     CATEGORY = "image/postprocessing"
 
     def process(self, image, operation, kernel_size):
-        device = comfy.model_management.get_torch_device()
+        device = vgs.submodules.comfyui.comfy.model_management.get_torch_device()
         kernel = torch.ones(kernel_size, kernel_size, device=device)
         image_k = image.to(device).movedim(-1, 1)
         if operation == "erode":

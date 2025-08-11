@@ -3,7 +3,7 @@ from __future__ import annotations
 import av
 import torchaudio
 import torch
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 import folder_paths
 import os
 import io
@@ -11,12 +11,12 @@ import json
 import random
 import hashlib
 import node_helpers
-from comfy.cli_args import args
-from comfy.comfy_types import FileLocator
+from vgs.submodules.comfyui.comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.comfy_types import FileLocator
 
 class EmptyLatentAudio:
     def __init__(self):
-        self.device = comfy.model_management.intermediate_device()
+        self.device = vgs.submodules.comfyui.comfy.model_management.intermediate_device()
 
     @classmethod
     def INPUT_TYPES(s):

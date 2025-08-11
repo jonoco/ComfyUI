@@ -8,9 +8,9 @@ from typing import List, Optional, Tuple, Union
 from .conv_nd_factory import make_conv_nd, make_linear_nd
 from .pixel_norm import PixelNorm
 from ..model import PixArtAlphaCombinedTimestepSizeEmbeddings
-import comfy.ops
+import vgs.submodules.comfyui.comfy.ops
 
-ops = comfy.ops.disable_weight_init
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 class Encoder(nn.Module):
     r"""

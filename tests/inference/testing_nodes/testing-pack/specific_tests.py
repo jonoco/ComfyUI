@@ -1,11 +1,11 @@
 import torch
 import time
 import asyncio
-from comfy.utils import ProgressBar
+from vgs.submodules.comfyui.comfy.utils import ProgressBar
 from .tools import VariantSupport
 from comfy_execution.graph_utils import GraphBuilder
-from comfy.comfy_types.node_typing import ComfyNodeABC
-from comfy.comfy_types import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types import IO
 
 class TestLazyMixImages:
     @classmethod

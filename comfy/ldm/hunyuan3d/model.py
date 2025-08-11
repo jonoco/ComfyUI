@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from comfy.ldm.flux.layers import (
+from vgs.submodules.comfyui.comfy.ldm.flux.layers import (
     DoubleStreamBlock,
     LastLayer,
     MLPEmbedder,

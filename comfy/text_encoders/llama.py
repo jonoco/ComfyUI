@@ -3,11 +3,11 @@ import torch.nn as nn
 from dataclasses import dataclass
 from typing import Optional, Any
 
-from comfy.ldm.modules.attention import optimized_attention_for_device
-import comfy.model_management
-import comfy.ldm.common_dit
+from vgs.submodules.comfyui.comfy.ldm.modules.attention import optimized_attention_for_device
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.ldm.common_dit
 
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 
 @dataclass
 class Llama2Config:
@@ -89,7 +89,7 @@ class RMSNorm(nn.Module):
         if self.add:
             w = w + 1.0
 
-        return comfy.ldm.common_dit.rms_norm(x, w, self.eps)
+        return vgs.submodules.comfyui.comfy.ldm.common_dit.rms_norm(x, w, self.eps)
 
 
 

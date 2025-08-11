@@ -8,12 +8,12 @@ import itertools
 import logging
 
 if TYPE_CHECKING:
-    from comfy.model_patcher import ModelPatcher, PatcherInjection
-    from comfy.model_base import BaseModel
-    from comfy.sd import CLIP
-import comfy.lora
-import comfy.model_management
-import comfy.patcher_extension
+    from vgs.submodules.comfyui.comfy.model_patcher import ModelPatcher, PatcherInjection
+    from vgs.submodules.comfyui.comfy.model_base import BaseModel
+    from vgs.submodules.comfyui.comfy.sd import CLIP
+import vgs.submodules.comfyui.comfy.lora
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.patcher_extension
 from node_helpers import conditioning_set_values
 
 # #######################################################################################################
@@ -165,10 +165,10 @@ class WeightHook(Hook):
         if self.need_weight_init:
             key_map = {}
             if target == EnumWeightTarget.Clip:
-                key_map = comfy.lora.model_lora_keys_clip(model.model, key_map)
+                key_map = vgs.submodules.comfyui.comfy.lora.model_lora_keys_clip(model.model, key_map)
             else:
-                key_map = comfy.lora.model_lora_keys_unet(model.model, key_map)
-            weights = comfy.lora.load_lora(self.weights, key_map, log_missing=False)
+                key_map = vgs.submodules.comfyui.comfy.lora.model_lora_keys_unet(model.model, key_map)
+            weights = vgs.submodules.comfyui.comfy.lora.load_lora(self.weights, key_map, log_missing=False)
         else:
             if target == EnumWeightTarget.Clip:
                 weights = self.weights_clip
@@ -257,12 +257,12 @@ class TransformerOptionsHook(Hook):
         else:
             add_model_options = {"to_load_options": self.transformers_dict}
         registered.add(self)
-        comfy.patcher_extension.merge_nested_dicts(model_options, add_model_options, copy_dict1=False)
+        vgs.submodules.comfyui.comfy.patcher_extension.merge_nested_dicts(model_options, add_model_options, copy_dict1=False)
         return True
 
     def on_apply_hooks(self, model: ModelPatcher, transformer_options: dict[str]):
         if not self._skip_adding:
-            comfy.patcher_extension.merge_nested_dicts(transformer_options, self.transformers_dict, copy_dict1=False)
+            vgs.submodules.comfyui.comfy.patcher_extension.merge_nested_dicts(transformer_options, self.transformers_dict, copy_dict1=False)
 
 WrapperHook = TransformerOptionsHook
 '''Only here for backwards compatibility, WrapperHook is identical to TransformerOptionsHook.'''
@@ -640,14 +640,14 @@ def load_hook_lora_for_models(model: ModelPatcher, clip: CLIP, lora: dict[str, t
                               strength_model: float, strength_clip: float):
     key_map = {}
     if model is not None:
-        key_map = comfy.lora.model_lora_keys_unet(model.model, key_map)
+        key_map = vgs.submodules.comfyui.comfy.lora.model_lora_keys_unet(model.model, key_map)
     if clip is not None:
-        key_map = comfy.lora.model_lora_keys_clip(clip.cond_stage_model, key_map)
+        key_map = vgs.submodules.comfyui.comfy.lora.model_lora_keys_clip(clip.cond_stage_model, key_map)
 
     hook_group = HookGroup()
     hook = WeightHook()
     hook_group.add(hook)
-    loaded: dict[str] = comfy.lora.load_lora(lora, key_map)
+    loaded: dict[str] = vgs.submodules.comfyui.comfy.lora.load_lora(lora, key_map)
     if model is not None:
         new_modelpatcher = model.clone()
         k = new_modelpatcher.add_hook_patches(hook=hook, patches=loaded, strength_patch=strength_model)

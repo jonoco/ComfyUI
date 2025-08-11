@@ -26,7 +26,7 @@ from comfy_api_nodes.apinode_utils import (
     tensor_to_bytesio,
     validate_string,
 )
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
 from comfy_api.input_impl import VideoFromFile
 
 import torch

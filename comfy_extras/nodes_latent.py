@@ -1,13 +1,13 @@
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 import comfy_extras.nodes_post_processing
 import torch
 
 
 def reshape_latent_to(target_shape, latent, repeat_batch=True):
     if latent.shape[1:] != target_shape[1:]:
-        latent = comfy.utils.common_upscale(latent, target_shape[-1], target_shape[-2], "bilinear", "center")
+        latent = vgs.submodules.comfyui.comfy.utils.common_upscale(latent, target_shape[-1], target_shape[-2], "bilinear", "center")
     if repeat_batch:
-        return comfy.utils.repeat_to_batch_size(latent, target_shape[0])
+        return vgs.submodules.comfyui.comfy.utils.repeat_to_batch_size(latent, target_shape[0])
     else:
         return latent
 

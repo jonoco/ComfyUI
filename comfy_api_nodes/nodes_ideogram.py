@@ -1,4 +1,4 @@
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 from inspect import cleandoc
 from PIL import Image
 import numpy as np

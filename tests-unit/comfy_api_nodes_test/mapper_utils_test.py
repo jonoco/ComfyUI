@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 from comfy_api_nodes.mapper_utils import model_field_to_node_input
 
 

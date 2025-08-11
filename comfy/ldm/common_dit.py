@@ -1,5 +1,5 @@
 import torch
-import comfy.rmsnorm
+import vgs.submodules.comfyui.comfy.rmsnorm
 
 
 def pad_to_patch_size(img, patch_size=(2, 2), padding_mode="circular"):
@@ -13,4 +13,4 @@ def pad_to_patch_size(img, patch_size=(2, 2), padding_mode="circular"):
     return torch.nn.functional.pad(img, pad, mode=padding_mode)
 
 
-rms_norm = comfy.rmsnorm.rms_norm
+rms_norm = vgs.submodules.comfyui.comfy.rmsnorm.rms_norm

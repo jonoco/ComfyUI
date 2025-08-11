@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import nodes
 import folder_paths
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -14,9 +14,9 @@ import re
 from io import BytesIO
 from inspect import cleandoc
 import torch
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 
-from comfy.comfy_types import FileLocator, IO
+from vgs.submodules.comfyui.comfy.comfy_types import FileLocator, IO
 from server import PromptServer
 
 MAX_RESOLUTION = nodes.MAX_RESOLUTION
@@ -300,7 +300,7 @@ Optional spacing can be added between images.
             else:  # up, down
                 target_w, target_h = w1, int(w1 / aspect_ratio)
 
-            image2 = comfy.utils.common_upscale(
+            image2 = vgs.submodules.comfyui.comfy.utils.common_upscale(
                 image2.movedim(-1, 1), target_w, target_h, "lanczos", "disabled"
             ).movedim(1, -1)
 
@@ -453,7 +453,7 @@ class ResizeAndPadImage:
 
         image_permuted = image.permute(0, 3, 1, 2)
 
-        resized = comfy.utils.common_upscale(image_permuted, new_width, new_height, interpolation, "disabled")
+        resized = vgs.submodules.comfyui.comfy.utils.common_upscale(image_permuted, new_width, new_height, interpolation, "disabled")
 
         pad_value = 0.0 if padding_color == "black" else 1.0
         padded = torch.full(

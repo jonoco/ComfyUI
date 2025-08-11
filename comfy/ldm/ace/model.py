@@ -18,9 +18,9 @@ from typing import Optional, List, Union
 import torch
 from torch import nn
 
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 
-from comfy.ldm.lightricks.model import TimestepEmbedding, Timesteps
+from vgs.submodules.comfyui.comfy.ldm.lightricks.model import TimestepEmbedding, Timesteps
 from .attention import LinearTransformerBlock, t2i_modulate
 from .lyric_encoder import ConformerEncoder as LyricEncoder
 

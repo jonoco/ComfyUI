@@ -30,7 +30,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import logging
 
-from comfy.ldm.modules.diffusionmodules.model import vae_attention
+from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.model import vae_attention
 
 from .patching import (
     Patcher,
@@ -50,8 +50,8 @@ from .utils import (
     time2batch,
 )
 
-import comfy.ops
-ops = comfy.ops.disable_weight_init
+import vgs.submodules.comfyui.comfy.ops
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 _LEGACY_NUM_GROUPS = 32
 

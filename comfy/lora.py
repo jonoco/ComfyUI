@@ -17,10 +17,10 @@
 """
 
 from __future__ import annotations
-import comfy.utils
-import comfy.model_management
-import comfy.model_base
-import comfy.weight_adapter as weight_adapter
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.model_base
+import vgs.submodules.comfyui.comfy.weight_adapter as weight_adapter
 import logging
 import torch
 
@@ -185,7 +185,7 @@ def model_lora_keys_unet(model, key_map={}):
             else:
                 key_map["{}".format(k)] = k #generic lora format for not .weight without any weird key names
 
-    diffusers_keys = comfy.utils.unet_to_diffusers(model.model_config.unet_config)
+    diffusers_keys = vgs.submodules.comfyui.comfy.utils.unet_to_diffusers(model.model_config.unet_config)
     for k in diffusers_keys:
         if k.endswith(".weight"):
             unet_key = "diffusion_model.{}".format(diffusers_keys[k])
@@ -200,15 +200,15 @@ def model_lora_keys_unet(model, key_map={}):
                     diffusers_lora_key = diffusers_lora_key[:-2]
                 key_map[diffusers_lora_key] = unet_key
 
-    if isinstance(model, comfy.model_base.StableCascade_C):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.StableCascade_C):
         for k in sdk:
             if k.startswith("diffusion_model."):
                 if k.endswith(".weight"):
                     key_lora = k[len("diffusion_model."):-len(".weight")].replace(".", "_")
                     key_map["lora_prior_unet_{}".format(key_lora)] = k
 
-    if isinstance(model, comfy.model_base.SD3): #Diffusers lora SD3
-        diffusers_keys = comfy.utils.mmdit_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.SD3): #Diffusers lora SD3
+        diffusers_keys = vgs.submodules.comfyui.comfy.utils.mmdit_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
         for k in diffusers_keys:
             if k.endswith(".weight"):
                 to = diffusers_keys[k]
@@ -224,16 +224,16 @@ def model_lora_keys_unet(model, key_map={}):
                 key_lora = "lycoris_{}".format(k[:-len(".weight")].replace(".", "_")) #simpletuner lycoris format
                 key_map[key_lora] = to
 
-    if isinstance(model, comfy.model_base.AuraFlow): #Diffusers lora AuraFlow
-        diffusers_keys = comfy.utils.auraflow_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.AuraFlow): #Diffusers lora AuraFlow
+        diffusers_keys = vgs.submodules.comfyui.comfy.utils.auraflow_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
         for k in diffusers_keys:
             if k.endswith(".weight"):
                 to = diffusers_keys[k]
                 key_lora = "transformer.{}".format(k[:-len(".weight")]) #simpletrainer and probably regular diffusers lora format
                 key_map[key_lora] = to
 
-    if isinstance(model, comfy.model_base.PixArt):
-        diffusers_keys = comfy.utils.pixart_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.PixArt):
+        diffusers_keys = vgs.submodules.comfyui.comfy.utils.pixart_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
         for k in diffusers_keys:
             if k.endswith(".weight"):
                 to = diffusers_keys[k]
@@ -246,14 +246,14 @@ def model_lora_keys_unet(model, key_map={}):
                 key_lora = "unet.base_model.model.{}".format(k[:-len(".weight")]) #old reference peft script
                 key_map[key_lora] = to
 
-    if isinstance(model, comfy.model_base.HunyuanDiT):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.HunyuanDiT):
         for k in sdk:
             if k.startswith("diffusion_model.") and k.endswith(".weight"):
                 key_lora = k[len("diffusion_model."):-len(".weight")]
                 key_map["base_model.model.{}".format(key_lora)] = k #official hunyuan lora format
 
-    if isinstance(model, comfy.model_base.Flux): #Diffusers lora Flux
-        diffusers_keys = comfy.utils.flux_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.Flux): #Diffusers lora Flux
+        diffusers_keys = vgs.submodules.comfyui.comfy.utils.flux_to_diffusers(model.model_config.unet_config, output_prefix="diffusion_model.")
         for k in diffusers_keys:
             if k.endswith(".weight"):
                 to = diffusers_keys[k]
@@ -261,13 +261,13 @@ def model_lora_keys_unet(model, key_map={}):
                 key_map["lycoris_{}".format(k[:-len(".weight")].replace(".", "_"))] = to #simpletrainer lycoris
                 key_map["lora_transformer_{}".format(k[:-len(".weight")].replace(".", "_"))] = to #onetrainer
 
-    if isinstance(model, comfy.model_base.GenmoMochi):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.GenmoMochi):
         for k in sdk:
             if k.startswith("diffusion_model.") and k.endswith(".weight"): #Official Mochi lora format
                 key_lora = k[len("diffusion_model."):-len(".weight")]
                 key_map["{}".format(key_lora)] = k
 
-    if isinstance(model, comfy.model_base.HunyuanVideo):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.HunyuanVideo):
         for k in sdk:
             if k.startswith("diffusion_model.") and k.endswith(".weight"):
                 # diffusion-pipe lora format
@@ -279,7 +279,7 @@ def model_lora_keys_unet(model, key_map={}):
                 key_map["transformer.{}".format(key_lora)] = k
                 key_map["diffusion_model.{}".format(key_lora)] = k  # Old loras
 
-    if isinstance(model, comfy.model_base.HiDream):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.HiDream):
         for k in sdk:
             if k.startswith("diffusion_model."):
                 if k.endswith(".weight"):
@@ -287,13 +287,13 @@ def model_lora_keys_unet(model, key_map={}):
                     key_map["lycoris_{}".format(key_lora.replace(".", "_"))] = k #SimpleTuner lycoris format
                     key_map["transformer.{}".format(key_lora)] = k #SimpleTuner regular format
 
-    if isinstance(model, comfy.model_base.ACEStep):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.ACEStep):
         for k in sdk:
             if k.startswith("diffusion_model.") and k.endswith(".weight"): #Official ACE step lora format
                 key_lora = k[len("diffusion_model."):-len(".weight")]
                 key_map["{}".format(key_lora)] = k
 
-    if isinstance(model, comfy.model_base.QwenImage):
+    if isinstance(model, vgs.submodules.comfyui.comfy.model_base.QwenImage):
         for k in sdk:
             if k.startswith("diffusion_model.") and k.endswith(".weight"): #QwenImage lora format
                 key_lora = k[len("diffusion_model."):-len(".weight")]
@@ -387,14 +387,14 @@ def calculate_weight(patches, weight, key, intermediate_dtype=torch.float32, ori
                 if diff.shape != weight.shape:
                     logging.warning("WARNING SHAPE MISMATCH {} WEIGHT NOT MERGED {} != {}".format(key, diff.shape, weight.shape))
                 else:
-                    weight += function(strength * comfy.model_management.cast_to_device(diff, weight.device, weight.dtype))
+                    weight += function(strength * vgs.submodules.comfyui.comfy.model_management.cast_to_device(diff, weight.device, weight.dtype))
         elif patch_type == "set":
             weight.copy_(v[0])
         elif patch_type == "model_as_lora":
             target_weight: torch.Tensor = v[0]
-            diff_weight = comfy.model_management.cast_to_device(target_weight, weight.device, intermediate_dtype) - \
-                          comfy.model_management.cast_to_device(original_weights[key][0][0], weight.device, intermediate_dtype)
-            weight += function(strength * comfy.model_management.cast_to_device(diff_weight, weight.device, weight.dtype))
+            diff_weight = vgs.submodules.comfyui.comfy.model_management.cast_to_device(target_weight, weight.device, intermediate_dtype) - \
+                         vgs.submodules.comfyui.comfy.model_management.cast_to_device(original_weights[key][0][0], weight.device, intermediate_dtype)
+            weight += function(strength * vgs.submodules.comfyui.comfy.model_management.cast_to_device(diff_weight, weight.device, weight.dtype))
         else:
             logging.warning("patch type not recognized {} {}".format(patch_type, key))
 

@@ -1,6 +1,6 @@
 import torch
 import math
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 import logging
 
 

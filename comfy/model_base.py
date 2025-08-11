@@ -18,44 +18,44 @@
 
 import torch
 import logging
-from comfy.ldm.modules.diffusionmodules.openaimodel import UNetModel, Timestep
-from comfy.ldm.cascade.stage_c import StageC
-from comfy.ldm.cascade.stage_b import StageB
-from comfy.ldm.modules.encoders.noise_aug_modules import CLIPEmbeddingNoiseAugmentation
-from comfy.ldm.modules.diffusionmodules.upscaling import ImageConcatWithNoiseAugmentation
-from comfy.ldm.modules.diffusionmodules.mmdit import OpenAISignatureMMDITWrapper
-import comfy.ldm.genmo.joint_model.asymm_models_joint
-import comfy.ldm.aura.mmdit
-import comfy.ldm.pixart.pixartms
-import comfy.ldm.hydit.models
-import comfy.ldm.audio.dit
-import comfy.ldm.audio.embedders
-import comfy.ldm.flux.model
-import comfy.ldm.lightricks.model
-import comfy.ldm.hunyuan_video.model
-import comfy.ldm.cosmos.model
-import comfy.ldm.cosmos.predict2
-import comfy.ldm.lumina.model
-import comfy.ldm.wan.model
-import comfy.ldm.hunyuan3d.model
-import comfy.ldm.hidream.model
-import comfy.ldm.chroma.model
-import comfy.ldm.ace.model
-import comfy.ldm.omnigen.omnigen2
-import comfy.ldm.qwen_image.model
+from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.openaimodel import UNetModel, Timestep
+from vgs.submodules.comfyui.comfy.ldm.cascade.stage_c import StageC
+from vgs.submodules.comfyui.comfy.ldm.cascade.stage_b import StageB
+from vgs.submodules.comfyui.comfy.ldm.modules.encoders.noise_aug_modules import CLIPEmbeddingNoiseAugmentation
+from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.upscaling import ImageConcatWithNoiseAugmentation
+from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit import OpenAISignatureMMDITWrapper
+import vgs.submodules.comfyui.comfy.ldm.genmo.joint_model.asymm_models_joint
+import vgs.submodules.comfyui.comfy.ldm.aura.mmdit
+import vgs.submodules.comfyui.comfy.ldm.pixart.pixartms
+import vgs.submodules.comfyui.comfy.ldm.hydit.models
+import vgs.submodules.comfyui.comfy.ldm.audio.dit
+import vgs.submodules.comfyui.comfy.ldm.audio.embedders
+import vgs.submodules.comfyui.comfy.ldm.flux.model
+import vgs.submodules.comfyui.comfy.ldm.lightricks.model
+import vgs.submodules.comfyui.comfy.ldm.hunyuan_video.model
+import vgs.submodules.comfyui.comfy.ldm.cosmos.model
+import vgs.submodules.comfyui.comfy.ldm.cosmos.predict2
+import vgs.submodules.comfyui.comfy.ldm.lumina.model
+import vgs.submodules.comfyui.comfy.ldm.wan.model
+import vgs.submodules.comfyui.comfy.ldm.hunyuan3d.model
+import vgs.submodules.comfyui.comfy.ldm.hidream.model
+import vgs.submodules.comfyui.comfy.ldm.chroma.model
+import vgs.submodules.comfyui.comfy.ldm.ace.model
+import vgs.submodules.comfyui.comfy.ldm.omnigen.omnigen2
+import vgs.submodules.comfyui.comfy.ldm.qwen_image.model
 
-import comfy.model_management
-import comfy.patcher_extension
-import comfy.conds
-import comfy.ops
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.patcher_extension
+import vgs.submodules.comfyui.comfy.conds
+import vgs.submodules.comfyui.comfy.ops
 from enum import Enum
 from . import utils
-import comfy.latent_formats
-import comfy.model_sampling
+import vgs.submodules.comfyui.comfy.latent_formats
+import vgs.submodules.comfyui.comfy.model_sampling
 import math
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from comfy.model_patcher import ModelPatcher
+    from vgs.submodules.comfyui.comfy.model_patcher import ModelPatcher
 
 class ModelType(Enum):
     EPS = 1
@@ -71,35 +71,35 @@ class ModelType(Enum):
 
 
 def model_sampling(model_config, model_type):
-    s = comfy.model_sampling.ModelSamplingDiscrete
+    s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingDiscrete
 
     if model_type == ModelType.EPS:
-        c = comfy.model_sampling.EPS
+        c = vgs.submodules.comfyui.comfy.model_sampling.EPS
     elif model_type == ModelType.V_PREDICTION:
-        c = comfy.model_sampling.V_PREDICTION
+        c = vgs.submodules.comfyui.comfy.model_sampling.V_PREDICTION
     elif model_type == ModelType.V_PREDICTION_EDM:
-        c = comfy.model_sampling.V_PREDICTION
-        s = comfy.model_sampling.ModelSamplingContinuousEDM
+        c = vgs.submodules.comfyui.comfy.model_sampling.V_PREDICTION
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingContinuousEDM
     elif model_type == ModelType.FLOW:
-        c = comfy.model_sampling.CONST
-        s = comfy.model_sampling.ModelSamplingDiscreteFlow
+        c = vgs.submodules.comfyui.comfy.model_sampling.CONST
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingDiscreteFlow
     elif model_type == ModelType.STABLE_CASCADE:
-        c = comfy.model_sampling.EPS
-        s = comfy.model_sampling.StableCascadeSampling
+        c = vgs.submodules.comfyui.comfy.model_sampling.EPS
+        s = vgs.submodules.comfyui.comfy.model_sampling.StableCascadeSampling
     elif model_type == ModelType.EDM:
-        c = comfy.model_sampling.EDM
-        s = comfy.model_sampling.ModelSamplingContinuousEDM
+        c = vgs.submodules.comfyui.comfy.model_sampling.EDM
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingContinuousEDM
     elif model_type == ModelType.V_PREDICTION_CONTINUOUS:
-        c = comfy.model_sampling.V_PREDICTION
-        s = comfy.model_sampling.ModelSamplingContinuousV
+        c = vgs.submodules.comfyui.comfy.model_sampling.V_PREDICTION
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingContinuousV
     elif model_type == ModelType.FLUX:
-        c = comfy.model_sampling.CONST
-        s = comfy.model_sampling.ModelSamplingFlux
+        c = vgs.submodules.comfyui.comfy.model_sampling.CONST
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingFlux
     elif model_type == ModelType.IMG_TO_IMG:
-        c = comfy.model_sampling.IMG_TO_IMG
+        c = vgs.submodules.comfyui.comfy.model_sampling.IMG_TO_IMG
     elif model_type == ModelType.FLOW_COSMOS:
-        c = comfy.model_sampling.COSMOS_RFLOW
-        s = comfy.model_sampling.ModelSamplingCosmosRFlow
+        c = vgs.submodules.comfyui.comfy.model_sampling.COSMOS_RFLOW
+        s = vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingCosmosRFlow
 
     class ModelSampling(s, c):
         pass
@@ -110,9 +110,9 @@ def model_sampling(model_config, model_type):
 def convert_tensor(extra, dtype, device):
     if hasattr(extra, "dtype"):
         if extra.dtype != torch.int and extra.dtype != torch.long:
-            extra = comfy.model_management.cast_to_device(extra, device, dtype)
+            extra = vgs.submodules.comfyui.comfy.model_management.cast_to_device(extra, device, dtype)
         else:
-            extra = comfy.model_management.cast_to_device(extra, device, None)
+            extra = vgs.submodules.comfyui.comfy.model_management.cast_to_device(extra, device, None)
     return extra
 
 
@@ -130,11 +130,11 @@ class BaseModel(torch.nn.Module):
         if not unet_config.get("disable_unet_model_creation", False):
             if model_config.custom_operations is None:
                 fp8 = model_config.optimizations.get("fp8", False)
-                operations = comfy.ops.pick_operations(unet_config.get("dtype", None), self.manual_cast_dtype, fp8_optimizations=fp8, scaled_fp8=model_config.scaled_fp8)
+                operations = vgs.submodules.comfyui.comfy.ops.pick_operations(unet_config.get("dtype", None), self.manual_cast_dtype, fp8_optimizations=fp8, scaled_fp8=model_config.scaled_fp8)
             else:
                 operations = model_config.custom_operations
             self.diffusion_model = unet_model(**unet_config, device=device, operations=operations)
-            if comfy.model_management.force_channels_last():
+            if vgs.submodules.comfyui.comfy.model_management.force_channels_last():
                 self.diffusion_model.to(memory_format=torch.channels_last)
                 logging.debug("using channels last mode for diffusion model")
             logging.info("model weight dtype {}, manual cast: {}".format(self.get_dtype(), self.manual_cast_dtype))
@@ -152,10 +152,10 @@ class BaseModel(torch.nn.Module):
         self.memory_usage_factor_conds = ()
 
     def apply_model(self, x, t, c_concat=None, c_crossattn=None, control=None, transformer_options={}, **kwargs):
-        return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+        return vgs.submodules.comfyui.comfy.patcher_extension.WrapperExecutor.new_class_executor(
             self._apply_model,
             self,
-            comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
+            vgs.submodules.comfyui.comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
         ).execute(x, t, c_concat, c_crossattn, control, transformer_options, **kwargs)
 
     def _apply_model(self, x, t, c_concat=None, c_crossattn=None, control=None, transformer_options={}, **kwargs):
@@ -175,7 +175,7 @@ class BaseModel(torch.nn.Module):
         device = xc.device
         t = self.model_sampling.timestep(t).float()
         if context is not None:
-            context = comfy.model_management.cast_to_device(context, device, dtype)
+            context = vgs.submodules.comfyui.comfy.model_management.cast_to_device(context, device, dtype)
 
         extra_conds = {}
         for o in kwargs:
@@ -264,23 +264,23 @@ class BaseModel(torch.nn.Module):
         out = {}
         concat_cond = self.concat_cond(**kwargs)
         if concat_cond is not None:
-            out['c_concat'] = comfy.conds.CONDNoiseShape(concat_cond)
+            out['c_concat'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(concat_cond)
 
         adm = self.encode_adm(**kwargs)
         if adm is not None:
-            out['y'] = comfy.conds.CONDRegular(adm)
+            out['y'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(adm)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDCrossAttn(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
 
         cross_attn_cnet = kwargs.get("cross_attn_controlnet", None)
         if cross_attn_cnet is not None:
-            out['crossattn_controlnet'] = comfy.conds.CONDCrossAttn(cross_attn_cnet)
+            out['crossattn_controlnet'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn_cnet)
 
         c_concat = kwargs.get("noise_concat", None)
         if c_concat is not None:
-            out['c_concat'] = comfy.conds.CONDNoiseShape(c_concat)
+            out['c_concat'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(c_concat)
 
         return out
 
@@ -353,13 +353,13 @@ class BaseModel(torch.nn.Module):
             if shape is not None and len(shape) > 0:
                 input_shapes += shape
 
-        if comfy.model_management.xformers_enabled() or comfy.model_management.pytorch_attention_flash_attention():
+        if vgs.submodules.comfyui.comfy.model_management.xformers_enabled() or vgs.submodules.comfyui.comfy.model_management.pytorch_attention_flash_attention():
             dtype = self.get_dtype()
             if self.manual_cast_dtype is not None:
                 dtype = self.manual_cast_dtype
             #TODO: this needs to be tweaked
             area = sum(map(lambda input_shape: input_shape[0] * math.prod(input_shape[2:]), input_shapes))
-            return (area * comfy.model_management.dtype_size(dtype) * 0.01 * self.memory_usage_factor) * (1024 * 1024)
+            return (area * vgs.submodules.comfyui.comfy.model_management.dtype_size(dtype) * 0.01 * self.memory_usage_factor) * (1024 * 1024)
         else:
             #TODO: this formula might be too aggressive since I tweaked the sub-quad and split algorithms to use less memory.
             area = sum(map(lambda input_shape: input_shape[0] * math.prod(input_shape[2:]), input_shapes))
@@ -487,7 +487,7 @@ class SVD_img2vid(BaseModel):
         out = {}
         adm = self.encode_adm(**kwargs)
         if adm is not None:
-            out['y'] = comfy.conds.CONDRegular(adm)
+            out['y'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(adm)
 
         latent_image = kwargs.get("concat_latent_image", None)
         noise = kwargs.get("noise", None)
@@ -500,16 +500,16 @@ class SVD_img2vid(BaseModel):
 
         latent_image = utils.resize_to_batch_size(latent_image, noise.shape[0])
 
-        out['c_concat'] = comfy.conds.CONDNoiseShape(latent_image)
+        out['c_concat'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(latent_image)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDCrossAttn(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
 
         if "time_conditioning" in kwargs:
-            out["time_context"] = comfy.conds.CONDCrossAttn(kwargs["time_conditioning"])
+            out["time_context"] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(kwargs["time_conditioning"])
 
-        out['num_video_frames'] = comfy.conds.CONDConstant(noise.shape[0])
+        out['num_video_frames'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(noise.shape[0])
         return out
 
 class SV3D_u(SVD_img2vid):
@@ -545,7 +545,7 @@ class SV3D_p(SVD_img2vid):
 class Stable_Zero123(BaseModel):
     def __init__(self, model_config, model_type=ModelType.EPS, device=None, cc_projection_weight=None, cc_projection_bias=None):
         super().__init__(model_config, model_type, device=device)
-        self.cc_projection = comfy.ops.manual_cast.Linear(cc_projection_weight.shape[1], cc_projection_weight.shape[0], dtype=self.get_dtype(), device=device)
+        self.cc_projection = vgs.submodules.comfyui.comfy.ops.manual_cast.Linear(cc_projection_weight.shape[1], cc_projection_weight.shape[0], dtype=self.get_dtype(), device=device)
         self.cc_projection.weight.copy_(cc_projection_weight)
         self.cc_projection.bias.copy_(cc_projection_bias)
 
@@ -563,13 +563,13 @@ class Stable_Zero123(BaseModel):
 
         latent_image = utils.resize_to_batch_size(latent_image, noise.shape[0])
 
-        out['c_concat'] = comfy.conds.CONDNoiseShape(latent_image)
+        out['c_concat'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(latent_image)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
             if cross_attn.shape[-1] != 768:
                 cross_attn = self.cc_projection(cross_attn)
-            out['c_crossattn'] = comfy.conds.CONDCrossAttn(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
         return out
 
 class SD_X4Upscaler(BaseModel):
@@ -600,12 +600,12 @@ class SD_X4Upscaler(BaseModel):
 
         image = utils.resize_to_batch_size(image, noise.shape[0])
 
-        out['c_concat'] = comfy.conds.CONDNoiseShape(image)
-        out['y'] = comfy.conds.CONDRegular(noise_level)
+        out['c_concat'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(image)
+        out['y'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(noise_level)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDCrossAttn(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
         return out
 
 class IP2P:
@@ -636,7 +636,7 @@ class SDXL_instructpix2pix(IP2P, SDXL):
     def __init__(self, model_config, model_type=ModelType.EPS, device=None):
         super().__init__(model_config, model_type, device=device)
         if model_type == ModelType.V_PREDICTION_EDM:
-            self.process_ip2p_image_in = lambda image: comfy.latent_formats.SDXL().process_in(image) #cosxl ip2p
+            self.process_ip2p_image_in = lambda image: vgs.submodules.comfyui.comfy.latent_formats.SDXL().process_in(image) #cosxl ip2p
         else:
             self.process_ip2p_image_in = lambda image: image #diffusers ip2p
 
@@ -644,11 +644,11 @@ class Lotus(BaseModel):
     def extra_conds(self, **kwargs):
         out = {}
         cross_attn = kwargs.get("cross_attn", None)
-        out['c_crossattn'] = comfy.conds.CONDCrossAttn(cross_attn)
+        out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
         device = kwargs["device"]
         task_emb = torch.tensor([1, 0]).float().to(device)
         task_emb = torch.cat([torch.sin(task_emb), torch.cos(task_emb)]).unsqueeze(0)
-        out['y'] = comfy.conds.CONDRegular(task_emb)
+        out['y'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(task_emb)
         return out
 
     def __init__(self, model_config, model_type=ModelType.IMG_TO_IMG, device=None):
@@ -663,7 +663,7 @@ class StableCascade_C(BaseModel):
         out = {}
         clip_text_pooled = kwargs["pooled_output"]
         if clip_text_pooled is not None:
-            out['clip_text_pooled'] = comfy.conds.CONDRegular(clip_text_pooled)
+            out['clip_text_pooled'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(clip_text_pooled)
 
         if "unclip_conditioning" in kwargs:
             embeds = []
@@ -673,13 +673,13 @@ class StableCascade_C(BaseModel):
             clip_img = torch.cat(embeds, dim=1)
         else:
             clip_img = torch.zeros((1, 1, 768))
-        out["clip_img"] = comfy.conds.CONDRegular(clip_img)
-        out["sca"] = comfy.conds.CONDRegular(torch.zeros((1,)))
-        out["crp"] = comfy.conds.CONDRegular(torch.zeros((1,)))
+        out["clip_img"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(clip_img)
+        out["sca"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.zeros((1,)))
+        out["crp"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.zeros((1,)))
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['clip_text'] = comfy.conds.CONDCrossAttn(cross_attn)
+            out['clip_text'] = vgs.submodules.comfyui.comfy.conds.CONDCrossAttn(cross_attn)
         return out
 
 
@@ -694,13 +694,13 @@ class StableCascade_B(BaseModel):
 
         clip_text_pooled = kwargs["pooled_output"]
         if clip_text_pooled is not None:
-            out['clip'] = comfy.conds.CONDRegular(clip_text_pooled)
+            out['clip'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(clip_text_pooled)
 
         #size of prior doesn't really matter if zeros because it gets resized but I still want it to get batched
         prior = kwargs.get("stable_cascade_prior", torch.zeros((1, 16, (noise.shape[2] * 4) // 42, (noise.shape[3] * 4) // 42), dtype=noise.dtype, layout=noise.layout, device=noise.device))
 
-        out["effnet"] = comfy.conds.CONDRegular(prior.to(device=noise.device))
-        out["sca"] = comfy.conds.CONDRegular(torch.zeros((1,)))
+        out["effnet"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(prior.to(device=noise.device))
+        out["sca"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.zeros((1,)))
         return out
 
 
@@ -715,27 +715,27 @@ class SD3(BaseModel):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out
 
 
 class AuraFlow(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.aura.mmdit.MMDiT)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.aura.mmdit.MMDiT)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out
 
 
 class StableAudio1(BaseModel):
     def __init__(self, model_config, seconds_start_embedder_weights, seconds_total_embedder_weights, model_type=ModelType.V_PREDICTION_CONTINUOUS, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.audio.dit.AudioDiffusionTransformer)
-        self.seconds_start_embedder = comfy.ldm.audio.embedders.NumberConditioner(768, min_val=0, max_val=512)
-        self.seconds_total_embedder = comfy.ldm.audio.embedders.NumberConditioner(768, min_val=0, max_val=512)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.audio.dit.AudioDiffusionTransformer)
+        self.seconds_start_embedder = vgs.submodules.comfyui.comfy.ldm.audio.embedders.NumberConditioner(768, min_val=0, max_val=512)
+        self.seconds_total_embedder = vgs.submodules.comfyui.comfy.ldm.audio.embedders.NumberConditioner(768, min_val=0, max_val=512)
         self.seconds_start_embedder.load_state_dict(seconds_start_embedder_weights)
         self.seconds_total_embedder.load_state_dict(seconds_total_embedder_weights)
 
@@ -752,12 +752,12 @@ class StableAudio1(BaseModel):
         seconds_total_embed = self.seconds_total_embedder([seconds_total])[0].to(device)
 
         global_embed = torch.cat([seconds_start_embed, seconds_total_embed], dim=-1).reshape((1, -1))
-        out['global_embed'] = comfy.conds.CONDRegular(global_embed)
+        out['global_embed'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(global_embed)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
             cross_attn = torch.cat([cross_attn.to(device), seconds_start_embed.repeat((cross_attn.shape[0], 1, 1)), seconds_total_embed.repeat((cross_attn.shape[0], 1, 1))], dim=1)
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out
 
     def state_dict_for_saving(self, clip_state_dict=None, vae_state_dict=None, clip_vision_state_dict=None):
@@ -772,55 +772,55 @@ class StableAudio1(BaseModel):
 
 class HunyuanDiT(BaseModel):
     def __init__(self, model_config, model_type=ModelType.V_PREDICTION, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.hydit.models.HunYuanDiT)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.hydit.models.HunYuanDiT)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
-            out['text_embedding_mask'] = comfy.conds.CONDRegular(attention_mask)
+            out['text_embedding_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
 
         conditioning_mt5xl = kwargs.get("conditioning_mt5xl", None)
         if conditioning_mt5xl is not None:
-            out['encoder_hidden_states_t5'] = comfy.conds.CONDRegular(conditioning_mt5xl)
+            out['encoder_hidden_states_t5'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(conditioning_mt5xl)
 
         attention_mask_mt5xl = kwargs.get("attention_mask_mt5xl", None)
         if attention_mask_mt5xl is not None:
-            out['text_embedding_mask_t5'] = comfy.conds.CONDRegular(attention_mask_mt5xl)
+            out['text_embedding_mask_t5'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask_mt5xl)
 
         width = kwargs.get("width", 768)
         height = kwargs.get("height", 768)
         target_width = kwargs.get("target_width", width)
         target_height = kwargs.get("target_height", height)
 
-        out['image_meta_size'] = comfy.conds.CONDRegular(torch.FloatTensor([[height, width, target_height, target_width, 0, 0]]))
+        out['image_meta_size'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([[height, width, target_height, target_width, 0, 0]]))
         return out
 
 class PixArt(BaseModel):
     def __init__(self, model_config, model_type=ModelType.EPS, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.pixart.pixartms.PixArtMS)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.pixart.pixartms.PixArtMS)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         width = kwargs.get("width", None)
         height = kwargs.get("height", None)
         if width is not None and height is not None:
-            out["c_size"] = comfy.conds.CONDRegular(torch.FloatTensor([[height, width]]))
-            out["c_ar"] = comfy.conds.CONDRegular(torch.FloatTensor([[kwargs.get("aspect_ratio", height/width)]]))
+            out["c_size"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([[height, width]]))
+            out["c_ar"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([[kwargs.get("aspect_ratio", height/width)]]))
 
         return out
 
 class Flux(BaseModel):
-    def __init__(self, model_config, model_type=ModelType.FLUX, device=None, unet_model=comfy.ldm.flux.model.Flux):
+    def __init__(self, model_config, model_type=ModelType.FLUX, device=None, unet_model=vgs.submodules.comfyui.comfy.ldm.flux.model.Flux):
         super().__init__(model_config, model_type, device=device, unet_model=unet_model)
         self.memory_usage_factor_conds = ("ref_latents",)
 
@@ -868,7 +868,7 @@ class Flux(BaseModel):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         # upscale the attention mask, since now we
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
@@ -878,18 +878,18 @@ class Flux(BaseModel):
             # essentially dividing and rounding up
             (h_tok, w_tok) = (math.ceil(shape[2] / self.diffusion_model.patch_size), math.ceil(shape[3] / self.diffusion_model.patch_size))
             attention_mask = utils.upscale_dit_mask(attention_mask, mask_ref_size, (h_tok, w_tok))
-            out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
+            out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
 
         guidance = kwargs.get("guidance", 3.5)
         if guidance is not None:
-            out['guidance'] = comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
+            out['guidance'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
 
         ref_latents = kwargs.get("reference_latents", None)
         if ref_latents is not None:
             latents = []
             for lat in ref_latents:
                 latents.append(self.process_latent_in(lat))
-            out['ref_latents'] = comfy.conds.CONDList(latents)
+            out['ref_latents'] = vgs.submodules.comfyui.comfy.conds.CONDList(latents)
         return out
 
     def extra_conds_shapes(self, **kwargs):
@@ -902,41 +902,41 @@ class Flux(BaseModel):
 
 class GenmoMochi(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.genmo.joint_model.asymm_models_joint.AsymmDiTJoint)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.genmo.joint_model.asymm_models_joint.AsymmDiTJoint)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
-            out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
-            out['num_tokens'] = comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
+            out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
+            out['num_tokens'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out
 
 class LTXV(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLUX, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.lightricks.model.LTXVModel) #TODO
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.lightricks.model.LTXVModel) #TODO
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
-            out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
+            out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
-        out['frame_rate'] = comfy.conds.CONDConstant(kwargs.get("frame_rate", 25))
+        out['frame_rate'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(kwargs.get("frame_rate", 25))
 
         denoise_mask = kwargs.get("concat_mask", kwargs.get("denoise_mask", None))
         if denoise_mask is not None:
-            out["denoise_mask"] = comfy.conds.CONDRegular(denoise_mask)
+            out["denoise_mask"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(denoise_mask)
 
         keyframe_idxs = kwargs.get("keyframe_idxs", None)
         if keyframe_idxs is not None:
-            out['keyframe_idxs'] = comfy.conds.CONDRegular(keyframe_idxs)
+            out['keyframe_idxs'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(keyframe_idxs)
 
         return out
 
@@ -950,7 +950,7 @@ class LTXV(BaseModel):
 
 class HunyuanVideo(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.hunyuan_video.model.HunyuanVideo)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.hunyuan_video.model.HunyuanVideo)
 
     def encode_adm(self, **kwargs):
         return kwargs["pooled_output"]
@@ -959,22 +959,22 @@ class HunyuanVideo(BaseModel):
         out = super().extra_conds(**kwargs)
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
-            out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
+            out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         guidance = kwargs.get("guidance", 6.0)
         if guidance is not None:
-            out['guidance'] = comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
+            out['guidance'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
 
         guiding_frame_index = kwargs.get("guiding_frame_index", None)
         if guiding_frame_index is not None:
-            out['guiding_frame_index'] = comfy.conds.CONDRegular(torch.FloatTensor([guiding_frame_index]))
+            out['guiding_frame_index'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([guiding_frame_index]))
 
         ref_latent = kwargs.get("ref_latent", None)
         if ref_latent is not None:
-            out['ref_latent'] = comfy.conds.CONDRegular(self.process_latent_in(ref_latent))
+            out['ref_latent'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(self.process_latent_in(ref_latent))
 
         return out
 
@@ -999,7 +999,7 @@ class HunyuanVideoSkyreelsI2V(HunyuanVideo):
 
 class CosmosVideo(BaseModel):
     def __init__(self, model_config, model_type=ModelType.EDM, image_to_video=False, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.cosmos.model.GeneralDIT)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.cosmos.model.GeneralDIT)
         self.image_to_video = image_to_video
         if self.image_to_video:
             self.concat_keys = ("mask_inverted",)
@@ -1008,12 +1008,12 @@ class CosmosVideo(BaseModel):
         out = super().extra_conds(**kwargs)
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
-            out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
+            out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
-        out['fps'] = comfy.conds.CONDConstant(kwargs.get("frame_rate", None))
+        out['fps'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(kwargs.get("frame_rate", None))
         return out
 
     def scale_latent_inpaint(self, sigma, noise, latent_image, **kwargs):
@@ -1026,7 +1026,7 @@ class CosmosVideo(BaseModel):
 
 class CosmosPredict2(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW_COSMOS, image_to_video=False, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.cosmos.predict2.MiniTrainDIT)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.cosmos.predict2.MiniTrainDIT)
         self.image_to_video = image_to_video
         if self.image_to_video:
             self.concat_keys = ("mask_inverted",)
@@ -1035,13 +1035,13 @@ class CosmosPredict2(BaseModel):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         denoise_mask = kwargs.get("concat_mask", kwargs.get("denoise_mask", None))
         if denoise_mask is not None:
-            out["denoise_mask"] = comfy.conds.CONDRegular(denoise_mask)
+            out["denoise_mask"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(denoise_mask)
 
-        out['fps'] = comfy.conds.CONDConstant(kwargs.get("frame_rate", None))
+        out['fps'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(kwargs.get("frame_rate", None))
         return out
 
     def process_timestep(self, timestep, x, denoise_mask=None, **kwargs):
@@ -1065,23 +1065,23 @@ class CosmosPredict2(BaseModel):
 
 class Lumina2(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.lumina.model.NextDiT)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.lumina.model.NextDiT)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
             if torch.numel(attention_mask) != attention_mask.sum():
-                out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
-            out['num_tokens'] = comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
+                out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
+            out['num_tokens'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out
 
 class WAN21(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, image_to_video=False, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.wan.model.WanModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.wan.model.WanModel)
         self.image_to_video = image_to_video
 
     def concat_cond(self, **kwargs):
@@ -1130,22 +1130,22 @@ class WAN21(BaseModel):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         clip_vision_output = kwargs.get("clip_vision_output", None)
         if clip_vision_output is not None:
-            out['clip_fea'] = comfy.conds.CONDRegular(clip_vision_output.penultimate_hidden_states)
+            out['clip_fea'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(clip_vision_output.penultimate_hidden_states)
 
         time_dim_concat = kwargs.get("time_dim_concat", None)
         if time_dim_concat is not None:
-            out['time_dim_concat'] = comfy.conds.CONDRegular(self.process_latent_in(time_dim_concat))
+            out['time_dim_concat'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(self.process_latent_in(time_dim_concat))
 
         return out
 
 
 class WAN21_Vace(WAN21):
     def __init__(self, model_config, model_type=ModelType.FLOW, image_to_video=False, device=None):
-        super(WAN21, self).__init__(model_config, model_type, device=device, unet_model=comfy.ldm.wan.model.VaceWanModel)
+        super(WAN21, self).__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.wan.model.VaceWanModel)
         self.image_to_video = image_to_video
 
     def extra_conds(self, **kwargs):
@@ -1171,38 +1171,38 @@ class WAN21_Vace(WAN21):
             vace_frames_out.append(vf)
 
         vace_frames = torch.stack(vace_frames_out, dim=1)
-        out['vace_context'] = comfy.conds.CONDRegular(vace_frames)
+        out['vace_context'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(vace_frames)
 
         vace_strength = kwargs.get("vace_strength", [1.0] * len(vace_frames_out))
-        out['vace_strength'] = comfy.conds.CONDConstant(vace_strength)
+        out['vace_strength'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(vace_strength)
         return out
 
 class WAN21_Camera(WAN21):
     def __init__(self, model_config, model_type=ModelType.FLOW, image_to_video=False, device=None):
-        super(WAN21, self).__init__(model_config, model_type, device=device, unet_model=comfy.ldm.wan.model.CameraWanModel)
+        super(WAN21, self).__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.wan.model.CameraWanModel)
         self.image_to_video = image_to_video
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         camera_conditions = kwargs.get("camera_conditions", None)
         if camera_conditions is not None:
-            out['camera_conditions'] = comfy.conds.CONDRegular(camera_conditions)
+            out['camera_conditions'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(camera_conditions)
         return out
 
 class WAN22(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, image_to_video=False, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.wan.model.WanModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.wan.model.WanModel)
         self.image_to_video = image_to_video
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         denoise_mask = kwargs.get("concat_mask", kwargs.get("denoise_mask", None))
         if denoise_mask is not None:
-            out["denoise_mask"] = comfy.conds.CONDRegular(denoise_mask)
+            out["denoise_mask"] = vgs.submodules.comfyui.comfy.conds.CONDRegular(denoise_mask)
         return out
 
     def process_timestep(self, timestep, x, denoise_mask=None, **kwargs):
@@ -1216,22 +1216,22 @@ class WAN22(BaseModel):
 
 class Hunyuan3Dv2(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.hunyuan3d.model.Hunyuan3Dv2)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.hunyuan3d.model.Hunyuan3Dv2)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         guidance = kwargs.get("guidance", 5.0)
         if guidance is not None:
-            out['guidance'] = comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
+            out['guidance'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
         return out
 
 class HiDream(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.hidream.model.HiDreamImageTransformer2DModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.hidream.model.HiDreamImageTransformer2DModel)
 
     def encode_adm(self, **kwargs):
         return kwargs["pooled_output"]
@@ -1240,30 +1240,30 @@ class HiDream(BaseModel):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         conditioning_llama3 = kwargs.get("conditioning_llama3", None)
         if conditioning_llama3 is not None:
-            out['encoder_hidden_states_llama3'] = comfy.conds.CONDRegular(conditioning_llama3)
+            out['encoder_hidden_states_llama3'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(conditioning_llama3)
         image_cond = kwargs.get("concat_latent_image", None)
         if image_cond is not None:
-            out['image_cond'] = comfy.conds.CONDNoiseShape(self.process_latent_in(image_cond))
+            out['image_cond'] = vgs.submodules.comfyui.comfy.conds.CONDNoiseShape(self.process_latent_in(image_cond))
         return out
 
 class Chroma(Flux):
     def __init__(self, model_config, model_type=ModelType.FLUX, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.chroma.model.Chroma)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.chroma.model.Chroma)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
 
         guidance = kwargs.get("guidance", 0)
         if guidance is not None:
-            out['guidance'] = comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
+            out['guidance'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.FloatTensor([guidance]))
         return out
 
 class ACEStep(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.ace.model.ACEStepTransformer2DModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.ace.model.ACEStepTransformer2DModel)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
@@ -1271,18 +1271,18 @@ class ACEStep(BaseModel):
 
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
 
         conditioning_lyrics = kwargs.get("conditioning_lyrics", None)
         if cross_attn is not None:
-            out['lyric_token_idx'] = comfy.conds.CONDRegular(conditioning_lyrics)
-        out['speaker_embeds'] = comfy.conds.CONDRegular(torch.zeros(noise.shape[0], 512, device=noise.device, dtype=noise.dtype))
-        out['lyrics_strength'] = comfy.conds.CONDConstant(kwargs.get("lyrics_strength", 1.0))
+            out['lyric_token_idx'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(conditioning_lyrics)
+        out['speaker_embeds'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(torch.zeros(noise.shape[0], 512, device=noise.device, dtype=noise.dtype))
+        out['lyrics_strength'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(kwargs.get("lyrics_strength", 1.0))
         return out
 
 class Omnigen2(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLOW, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.omnigen.omnigen2.OmniGen2Transformer2DModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.omnigen.omnigen2.OmniGen2Transformer2DModel)
         self.memory_usage_factor_conds = ("ref_latents",)
 
     def extra_conds(self, **kwargs):
@@ -1290,17 +1290,17 @@ class Omnigen2(BaseModel):
         attention_mask = kwargs.get("attention_mask", None)
         if attention_mask is not None:
             if torch.numel(attention_mask) != attention_mask.sum():
-                out['attention_mask'] = comfy.conds.CONDRegular(attention_mask)
-            out['num_tokens'] = comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
+                out['attention_mask'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(attention_mask)
+            out['num_tokens'] = vgs.submodules.comfyui.comfy.conds.CONDConstant(max(1, torch.sum(attention_mask).item()))
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         ref_latents = kwargs.get("reference_latents", None)
         if ref_latents is not None:
             latents = []
             for lat in ref_latents:
                 latents.append(self.process_latent_in(lat))
-            out['ref_latents'] = comfy.conds.CONDList(latents)
+            out['ref_latents'] = vgs.submodules.comfyui.comfy.conds.CONDList(latents)
         return out
 
     def extra_conds_shapes(self, **kwargs):
@@ -1312,11 +1312,11 @@ class Omnigen2(BaseModel):
 
 class QwenImage(BaseModel):
     def __init__(self, model_config, model_type=ModelType.FLUX, device=None):
-        super().__init__(model_config, model_type, device=device, unet_model=comfy.ldm.qwen_image.model.QwenImageTransformer2DModel)
+        super().__init__(model_config, model_type, device=device, unet_model=vgs.submodules.comfyui.comfy.ldm.qwen_image.model.QwenImageTransformer2DModel)
 
     def extra_conds(self, **kwargs):
         out = super().extra_conds(**kwargs)
         cross_attn = kwargs.get("cross_attn", None)
         if cross_attn is not None:
-            out['c_crossattn'] = comfy.conds.CONDRegular(cross_attn)
+            out['c_crossattn'] = vgs.submodules.comfyui.comfy.conds.CONDRegular(cross_attn)
         return out

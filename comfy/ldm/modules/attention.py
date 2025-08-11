@@ -34,9 +34,9 @@ if model_management.flash_attention_enabled():
         logging.error(f"\n\nTo use the `--use-flash-attention` feature, the `flash-attn` package must be installed first.\ncommand:\n\t{sys.executable} -m pip install flash-attn")
         exit(-1)
 
-from comfy.cli_args import args
-import comfy.ops
-ops = comfy.ops.disable_weight_init
+from vgs.submodules.comfyui.comfy.cli_args import args
+import vgs.submodules.comfyui.comfy.ops
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 FORCE_UPCAST_ATTENTION_DTYPE = model_management.force_upcast_attention_dtype()
 

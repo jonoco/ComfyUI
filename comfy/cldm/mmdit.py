@@ -1,6 +1,6 @@
 import torch
 from typing import Optional
-import comfy.ldm.modules.diffusionmodules.mmdit
+import vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit
 
 class ControlNet(vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit.MMDiT):
     def __init__(
@@ -21,7 +21,7 @@ class ControlNet(vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit
         if control_latent_channels is None:
             control_latent_channels = self.in_channels
 
-        self.pos_embed_input = comfy.ldm.modules.diffusionmodules.mmdit.PatchEmbed(
+        self.pos_embed_input = vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit.PatchEmbed(
             None,
             self.patch_size,
             control_latent_channels,

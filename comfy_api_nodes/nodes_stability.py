@@ -1,5 +1,5 @@
 from inspect import cleandoc
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 from comfy_api_nodes.apis.stability_api import (
     StabilityUpscaleConservativeRequest,
     StabilityUpscaleCreativeRequest,

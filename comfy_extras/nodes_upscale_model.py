@@ -2,7 +2,7 @@ import logging
 from spandrel import ModelLoader, ImageModelDescriptor
 from comfy import model_management
 import torch
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 import folder_paths
 
 try:
@@ -25,9 +25,9 @@ class UpscaleModelLoader:
 
     def load_model(self, model_name):
         model_path = folder_paths.get_full_path_or_raise("upscale_models", model_name)
-        sd = comfy.utils.load_torch_file(model_path, safe_load=True)
+        sd = vgs.submodules.comfyui.comfy.utils.load_torch_file(model_path, safe_load=True)
         if "module.layers.0.residual_group.blocks.0.norm1.weight" in sd:
-            sd = comfy.utils.state_dict_prefix_replace(sd, {"module.":""})
+            sd = vgs.submodules.comfyui.comfy.utils.state_dict_prefix_replace(sd, {"module.":""})
         out = ModelLoader().load_from_state_dict(sd).eval()
 
         if not isinstance(out, ImageModelDescriptor):
@@ -64,9 +64,9 @@ class ImageUpscaleWithModel:
         oom = True
         while oom:
             try:
-                steps = in_img.shape[0] * comfy.utils.get_tiled_scale_steps(in_img.shape[3], in_img.shape[2], tile_x=tile, tile_y=tile, overlap=overlap)
-                pbar = comfy.utils.ProgressBar(steps)
-                s = comfy.utils.tiled_scale(in_img, lambda a: upscale_model(a), tile_x=tile, tile_y=tile, overlap=overlap, upscale_amount=upscale_model.scale, pbar=pbar)
+                steps = in_img.shape[0] * vgs.submodules.comfyui.comfy.utils.get_tiled_scale_steps(in_img.shape[3], in_img.shape[2], tile_x=tile, tile_y=tile, overlap=overlap)
+                pbar = vgs.submodules.comfyui.comfy.utils.ProgressBar(steps)
+                s = vgs.submodules.comfyui.comfy.utils.tiled_scale(in_img, lambda a: upscale_model(a), tile_x=tile, tile_y=tile, overlap=overlap, upscale_amount=upscale_model.scale, pbar=pbar)
                 oom = False
             except model_management.OOM_EXCEPTION as e:
                 tile //= 2

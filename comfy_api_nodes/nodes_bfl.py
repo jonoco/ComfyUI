@@ -2,7 +2,7 @@ import asyncio
 import io
 from inspect import cleandoc
 from typing import Union, Optional
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
 from comfy_api_nodes.apis.bfl_api import (
     BFLStatus,
     BFLFluxExpandImageRequest,

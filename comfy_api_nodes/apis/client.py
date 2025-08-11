@@ -105,7 +105,7 @@ from pydantic import BaseModel, Field
 import uuid # For generating unique operation IDs
 
 from server import PromptServer
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 from comfy import utils
 from . import request_logger
 

@@ -2,7 +2,7 @@ import nodes
 import folder_paths
 import os
 
-from comfy.comfy_types import IO
+from vgs.submodules.comfyui.comfy.comfy_types import IO
 from comfy_api.input_impl import VideoFromFile
 
 from pathlib import Path

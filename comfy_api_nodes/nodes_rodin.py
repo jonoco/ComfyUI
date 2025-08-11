@@ -7,7 +7,7 @@ Rodin API docs: https://developer.hyper3d.ai/
 
 from __future__ import annotations
 from inspect import cleandoc
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 import folder_paths as comfy_paths
 import aiohttp
 import os

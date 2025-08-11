@@ -1,8 +1,8 @@
 import torch
-import comfy.model_management
-import comfy.sampler_helpers
-import comfy.samplers
-import comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.sampler_helpers
+import vgs.submodules.comfyui.comfy.samplers
+import vgs.submodules.comfyui.comfy.utils
 import node_helpers
 import math
 
@@ -31,7 +31,7 @@ class PerpNeg:
 
     def patch(self, model, empty_conditioning, neg_scale):
         m = model.clone()
-        nocond = comfy.sampler_helpers.convert_cond(empty_conditioning)
+        nocond = vgs.submodules.comfyui.comfy.sampler_helpers.convert_cond(empty_conditioning)
 
         def cfg_function(args):
             model = args["model"]
@@ -41,9 +41,9 @@ class PerpNeg:
             x = args["input"]
             sigma = args["sigma"]
             model_options = args["model_options"]
-            nocond_processed = comfy.samplers.encode_model_conds(model.extra_conds, nocond, x, x.device, "negative")
+            nocond_processed = vgs.submodules.comfyui.comfy.samplers.encode_model_conds(model.extra_conds, nocond, x, x.device, "negative")
 
-            (noise_pred_nocond,) = comfy.samplers.calc_cond_batch(model, [nocond_processed], x, sigma, model_options)
+            (noise_pred_nocond,) = vgs.submodules.comfyui.comfy.samplers.calc_cond_batch(model, [nocond_processed], x, sigma, model_options)
 
             cfg_result = x - perp_neg(x, noise_pred_pos, noise_pred_neg, noise_pred_nocond, neg_scale, cond_scale)
             return cfg_result
@@ -78,7 +78,7 @@ class Guider_PerpNeg(vgs.submodules.comfyui.comfy.samplers.CFGGuider):
 
         conds = [positive_cond, negative_cond, empty_cond]
 
-        out = comfy.samplers.calc_cond_batch(self.inner_model, conds, x, timestep, model_options)
+        out = vgs.submodules.comfyui.comfy.samplers.calc_cond_batch(self.inner_model, conds, x, timestep, model_options)
 
         # Apply pre_cfg_functions since sampling_function() is skipped
         for fn in model_options.get("sampler_pre_cfg_function", []):

@@ -1,6 +1,6 @@
 import re
 
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 
 class StringConcatenate():
     @classmethod

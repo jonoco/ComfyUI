@@ -8,8 +8,8 @@ from unittest.mock import patch
 from importlib import reload
 
 import folder_paths
-import comfy.cli_args
-from comfy.options import enable_args_parsing
+import vgs.submodules.comfyui.comfy.cli_args
+from vgs.submodules.comfyui.comfy.options import enable_args_parsing
 enable_args_parsing()
 
 

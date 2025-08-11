@@ -13,10 +13,10 @@ from .util import (
     AlphaBlender,
 )
 from ..attention import SpatialTransformer, SpatialVideoTransformer, default
-from comfy.ldm.util import exists
-import comfy.patcher_extension
-import comfy.ops
-ops = comfy.ops.disable_weight_init
+from vgs.submodules.comfyui.comfy.ldm.util import exists
+import vgs.submodules.comfyui.comfy.patcher_extension
+import vgs.submodules.comfyui.comfy.ops
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 class TimestepBlock(nn.Module):
     """
@@ -828,10 +828,10 @@ class UNetModel(nn.Module):
         )
 
     def forward(self, x, timesteps=None, context=None, y=None, control=None, transformer_options={}, **kwargs):
-        return comfy.patcher_extension.WrapperExecutor.new_class_executor(
+        return vgs.submodules.comfyui.comfy.patcher_extension.WrapperExecutor.new_class_executor(
             self._forward,
             self,
-            comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
+            vgs.submodules.comfyui.comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
         ).execute(x, timesteps, context, y, control, transformer_options, **kwargs)
 
     def _forward(self, x, timesteps=None, context=None, y=None, control=None, transformer_options={}, **kwargs):

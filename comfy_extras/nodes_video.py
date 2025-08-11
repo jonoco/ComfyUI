@@ -7,9 +7,9 @@ import folder_paths
 import json
 from typing import Optional, Literal
 from fractions import Fraction
-from comfy.comfy_types import IO, FileLocator, ComfyNodeABC
+from vgs.submodules.comfyui.comfy.comfy_types import IO, FileLocator, ComfyNodeABC
 from comfy_api.latest import Input, InputImpl, Types
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 
 class SaveWEBM:
     def __init__(self):

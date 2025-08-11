@@ -1,9 +1,9 @@
 from __future__ import annotations
 from inspect import cleandoc
 from typing import Optional
-from comfy.utils import ProgressBar
+from vgs.submodules.comfyui.comfy.utils import ProgressBar
 from comfy_extras.nodes_images import SVG # Added
-from comfy.comfy_types.node_typing import IO
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 from comfy_api_nodes.apis.recraft_api import (
     RecraftImageGenerationRequest,
     RecraftImageGenerationResponse,

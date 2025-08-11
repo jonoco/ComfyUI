@@ -1,5 +1,5 @@
 import torch
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 import node_helpers
 
 class TextEncodeAceStepAudio:
@@ -25,7 +25,7 @@ class TextEncodeAceStepAudio:
 
 class EmptyAceStepLatentAudio:
     def __init__(self):
-        self.device = comfy.model_management.intermediate_device()
+        self.device = vgs.submodules.comfyui.comfy.model_management.intermediate_device()
 
     @classmethod
     def INPUT_TYPES(s):

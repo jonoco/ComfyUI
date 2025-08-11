@@ -5,15 +5,15 @@ import torch.nn as nn
 import einops
 from einops import repeat
 
-from comfy.ldm.lightricks.model import TimestepEmbedding, Timesteps
+from vgs.submodules.comfyui.comfy.ldm.lightricks.model import TimestepEmbedding, Timesteps
 import torch.nn.functional as F
 
-from comfy.ldm.flux.math import apply_rope, rope
-from comfy.ldm.flux.layers import LastLayer
+from vgs.submodules.comfyui.comfy.ldm.flux.math import apply_rope, rope
+from vgs.submodules.comfyui.comfy.ldm.flux.layers import LastLayer
 
-from comfy.ldm.modules.attention import optimized_attention
-import comfy.model_management
-import comfy.ldm.common_dit
+from vgs.submodules.comfyui.comfy.ldm.modules.attention import optimized_attention
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.ldm.common_dit
 
 
 # Copied from https://github.com/black-forest-labs/flux/blob/main/src/flux/modules/layers.py
@@ -261,7 +261,7 @@ class MoEGate(nn.Module):
 
         ### compute gating score
         hidden_states = hidden_states.view(-1, h)
-        logits = F.linear(hidden_states, comfy.model_management.cast_to(self.weight, dtype=hidden_states.dtype, device=hidden_states.device), None)
+        logits = F.linear(hidden_states, vgs.submodules.comfyui.comfy.model_management.cast_to(self.weight, dtype=hidden_states.dtype, device=hidden_states.device), None)
         if self.scoring_func == 'softmax':
             scores = logits.softmax(dim=-1)
         else:
@@ -706,7 +706,7 @@ class HiDreamImageTransformer2DModel(nn.Module):
         bs, c, h, w = x.shape
         if image_cond is not None:
             x = torch.cat([x, image_cond], dim=-1)
-        hidden_states = comfy.ldm.common_dit.pad_to_patch_size(x, (self.patch_size, self.patch_size))
+        hidden_states = vgs.submodules.comfyui.comfy.ldm.common_dit.pad_to_patch_size(x, (self.patch_size, self.patch_size))
         timesteps = t
         pooled_embeds = y
         T5_encoder_hidden_states = context

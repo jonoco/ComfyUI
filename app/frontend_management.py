@@ -16,10 +16,10 @@ from importlib.metadata import version
 import requests
 from typing_extensions import NotRequired
 
-from utils.install_util import get_missing_requirements_message, requirements_path
+from vgs.submodules.comfyui.utils.install_util import get_missing_requirements_message, requirements_path
 
-from comfy.cli_args import DEFAULT_VERSION_STRING
-import app.logger
+from vgs.submodules.comfyui.comfy.cli_args import DEFAULT_VERSION_STRING
+import vgs.submodules.comfyui.app.logger
 
 
 def frontend_install_warning_message():

@@ -4,8 +4,8 @@ import torch.nn.functional as F
 from PIL import Image
 import math
 
-import comfy.utils
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
 import node_helpers
 
 class Blend:
@@ -38,7 +38,7 @@ class Blend:
         image2 = image2.to(image1.device)
         if image1.shape != image2.shape:
             image2 = image2.permute(0, 3, 1, 2)
-            image2 = comfy.utils.common_upscale(image2, image1.shape[2], image1.shape[1], upscale_method='bicubic', crop='center')
+            image2 = vgs.submodules.comfyui.comfy.utils.common_upscale(image2, image1.shape[2], image1.shape[1], upscale_method='bicubic', crop='center')
             image2 = image2.permute(0, 2, 3, 1)
 
         blended_image = self.blend_mode(image1, image2, blend_mode)
@@ -268,7 +268,7 @@ class ImageScaleToTotalPixels:
         width = round(samples.shape[3] * scale_by)
         height = round(samples.shape[2] * scale_by)
 
-        s = comfy.utils.common_upscale(samples, width, height, upscale_method, "disabled")
+        s = vgs.submodules.comfyui.comfy.utils.common_upscale(samples, width, height, upscale_method, "disabled")
         s = s.movedim(1,-1)
         return (s,)
 

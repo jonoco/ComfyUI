@@ -10,7 +10,7 @@ from inspect import cleandoc
 import numpy as np
 import torch
 from PIL import Image
-from comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
+from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 from server import PromptServer
 import folder_paths
 

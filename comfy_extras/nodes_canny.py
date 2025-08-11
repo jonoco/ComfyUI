@@ -1,5 +1,5 @@
 from kornia.filters import canny
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 
 
 class Canny:

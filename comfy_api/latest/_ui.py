@@ -20,7 +20,7 @@ from PIL.PngImagePlugin import PngInfo
 import folder_paths
 
 # used for image preview
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 from comfy_api.latest._io import ComfyNode, FolderType, Image, _UIOutput
 
 

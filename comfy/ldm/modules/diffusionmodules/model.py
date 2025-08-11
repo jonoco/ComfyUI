@@ -6,8 +6,8 @@ import numpy as np
 import logging
 
 from comfy import model_management
-import comfy.ops
-ops = comfy.ops.disable_weight_init
+import vgs.submodules.comfyui.comfy.ops
+ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 
 if model_management.xformers_enabled_vae():
     import xformers

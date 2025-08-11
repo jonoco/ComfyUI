@@ -1,6 +1,6 @@
 import torch
-import comfy.model_management
-import comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.utils
 import folder_paths
 import os
 import logging
@@ -47,7 +47,7 @@ LORA_TYPES = {"standard": LORAType.STANDARD,
               "full_diff": LORAType.FULL_DIFF}
 
 def calc_lora_model(model_diff, rank, prefix_model, prefix_lora, output_sd, lora_type, bias_diff=False):
-    comfy.model_management.load_models_gpu([model_diff], force_patch_weights=True)
+   vgs.submodules.comfyui.comfy.model_management.load_models_gpu([model_diff], force_patch_weights=True)
     sd = model_diff.model_state_dict(filter_prefix=prefix_model)
 
     for k in sd:
@@ -107,7 +107,7 @@ class LoraSave:
         output_checkpoint = f"{filename}_{counter:05}_.safetensors"
         output_checkpoint = os.path.join(full_output_folder, output_checkpoint)
 
-        comfy.utils.save_torch_file(output_sd, output_checkpoint, metadata=None)
+        vgs.submodules.comfyui.comfy.utils.save_torch_file(output_sd, output_checkpoint, metadata=None)
         return {}
 
 NODE_CLASS_MAPPINGS = {

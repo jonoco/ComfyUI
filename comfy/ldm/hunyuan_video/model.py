@@ -1,9 +1,9 @@
 #Based on Flux code because of weird hunyuan video code license.
 
 import torch
-import comfy.ldm.flux.layers
-import comfy.ldm.modules.diffusionmodules.mmdit
-from comfy.ldm.modules.attention import optimized_attention
+import vgs.submodules.comfyui.comfy.ldm.flux.layers
+import vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit
+from vgs.submodules.comfyui.comfy.ldm.modules.attention import optimized_attention
 
 
 from dataclasses import dataclass
@@ -11,7 +11,7 @@ from einops import repeat
 
 from torch import Tensor, nn
 
-from comfy.ldm.flux.layers import (
+from vgs.submodules.comfyui.comfy.ldm.flux.layers import (
     DoubleStreamBlock,
     EmbedND,
     LastLayer,
@@ -20,7 +20,7 @@ from comfy.ldm.flux.layers import (
     timestep_embedding
 )
 
-import comfy.ldm.common_dit
+import vgs.submodules.comfyui.comfy.ldm.common_dit
 
 
 @dataclass
@@ -184,7 +184,7 @@ class HunyuanVideo(nn.Module):
         self.num_heads = params.num_heads
         self.pe_embedder = EmbedND(dim=pe_dim, theta=params.theta, axes_dim=params.axes_dim)
 
-        self.img_in = comfy.ldm.modules.diffusionmodules.mmdit.PatchEmbed(None, self.patch_size, self.in_channels, self.hidden_size, conv3d=True, dtype=dtype, device=device, operations=operations)
+        self.img_in = vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit.PatchEmbed(None, self.patch_size, self.in_channels, self.hidden_size, conv3d=True, dtype=dtype, device=device, operations=operations)
         self.time_in = MLPEmbedder(in_dim=256, hidden_dim=self.hidden_size, dtype=dtype, device=device, operations=operations)
         self.vector_in = MLPEmbedder(params.vec_in_dim, self.hidden_size, dtype=dtype, device=device, operations=operations)
         self.guidance_in = (

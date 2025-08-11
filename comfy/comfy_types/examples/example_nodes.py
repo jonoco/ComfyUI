@@ -1,4 +1,4 @@
-from comfy.comfy_types import IO, ComfyNodeABC, InputTypeDict
+from vgs.submodules.comfyui.comfy.comfy_types import IO, ComfyNodeABC, InputTypeDict
 from inspect import cleandoc
 
 

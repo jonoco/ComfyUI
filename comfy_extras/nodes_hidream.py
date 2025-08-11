@@ -1,6 +1,6 @@
 import folder_paths
-import comfy.sd
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.sd
+import vgs.submodules.comfyui.comfy.model_management
 
 
 class QuadrupleCLIPLoader:
@@ -23,7 +23,7 @@ class QuadrupleCLIPLoader:
         clip_path2 = folder_paths.get_full_path_or_raise("text_encoders", clip_name2)
         clip_path3 = folder_paths.get_full_path_or_raise("text_encoders", clip_name3)
         clip_path4 = folder_paths.get_full_path_or_raise("text_encoders", clip_name4)
-        clip = comfy.sd.load_clip(ckpt_paths=[clip_path1, clip_path2, clip_path3, clip_path4], embedding_directory=folder_paths.get_folder_paths("embeddings"))
+        clip = vgs.submodules.comfyui.comfy.sd.load_clip(ckpt_paths=[clip_path1, clip_path2, clip_path3, clip_path4], embedding_directory=folder_paths.get_folder_paths("embeddings"))
         return (clip,)
 
 class CLIPTextEncodeHiDream:

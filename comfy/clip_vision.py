@@ -4,12 +4,12 @@ import torch
 import json
 import logging
 
-import comfy.ops
-import comfy.model_patcher
-import comfy.model_management
-import comfy.utils
-import comfy.clip_model
-import comfy.image_encoders.dino2
+import vgs.submodules.comfyui.comfy.ops
+import vgs.submodules.comfyui.comfy.model_patcher
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.clip_model
+import vgs.submodules.comfyui.comfy.image_encoders.dino2
 
 class Output:
     def __getitem__(self, key):
@@ -37,9 +37,9 @@ def clip_preprocess(image, size=224, mean=[0.48145466, 0.4578275, 0.40821073], s
     return (image - mean.view([3,1,1])) / std.view([3,1,1])
 
 IMAGE_ENCODERS = {
-    "clip_vision_model": comfy.clip_model.CLIPVisionModelProjection,
-    "siglip_vision_model": comfy.clip_model.CLIPVisionModelProjection,
-    "dinov2": comfy.image_encoders.dino2.Dinov2Model,
+    "clip_vision_model": vgs.submodules.comfyui.comfy.clip_model.CLIPVisionModelProjection,
+    "siglip_vision_model": vgs.submodules.comfyui.comfy.clip_model.CLIPVisionModelProjection,
+    "dinov2": vgs.submodules.comfyui.comfy.image_encoders.dino2.Dinov2Model,
 }
 
 class ClipVisionModel():
@@ -51,13 +51,13 @@ class ClipVisionModel():
         self.image_mean = config.get("image_mean", [0.48145466, 0.4578275, 0.40821073])
         self.image_std = config.get("image_std", [0.26862954, 0.26130258, 0.27577711])
         model_class = IMAGE_ENCODERS.get(config.get("model_type", "clip_vision_model"))
-        self.load_device = comfy.model_management.text_encoder_device()
-        offload_device = comfy.model_management.text_encoder_offload_device()
-        self.dtype = comfy.model_management.text_encoder_dtype(self.load_device)
-        self.model = model_class(config, self.dtype, offload_device, comfy.ops.manual_cast)
+        self.load_device = vgs.submodules.comfyui.comfy.model_management.text_encoder_device()
+        offload_device = vgs.submodules.comfyui.comfy.model_management.text_encoder_offload_device()
+        self.dtype = vgs.submodules.comfyui.comfy.model_management.text_encoder_dtype(self.load_device)
+        self.model = model_class(config, self.dtype, offload_device, vgs.submodules.comfyui.comfy.ops.manual_cast)
         self.model.eval()
 
-        self.patcher = comfy.model_patcher.ModelPatcher(self.model, load_device=self.load_device, offload_device=offload_device)
+        self.patcher = vgs.submodules.comfyui.comfy.model_patcher.ModelPatcher(self.model, load_device=self.load_device, offload_device=offload_device)
 
     def load_sd(self, sd):
         return self.model.load_state_dict(sd, strict=False)
@@ -66,7 +66,7 @@ class ClipVisionModel():
         return self.model.state_dict()
 
     def encode_image(self, image, crop=True):
-        comfy.model_management.load_model_gpu(self.patcher)
+        vgs.submodules.comfyui.comfy.model_management.load_model_gpu(self.patcher)
         pixel_values = clip_preprocess(image.to(self.load_device), size=self.image_size, mean=self.image_mean, std=self.image_std, crop=crop).float()
         out = self.model(pixel_values=pixel_values, intermediate_output=-2)
 
