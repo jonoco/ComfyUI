@@ -3,7 +3,7 @@ import sys
 import asyncio
 import traceback
 
-import nodes
+from vgs.submodules.comfyui import nodes
 import folder_paths
 import execution
 import uuid
@@ -23,33 +23,45 @@ from aiohttp import web
 import logging
 
 import mimetypes
-from comfy.cli_args import args
-import comfy.utils
-import comfy.model_management
-from comfy_api import feature_flags
+from vgs.submodules.comfyui.comfy.cli_args import args
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.model_management
+from vgs.submodules.comfyui.comfy_api import feature_flags
 import node_helpers
-from comfyui_version import __version__
-from app.frontend_management import FrontendManager
-from comfy_api.internal import _ComfyNodeInternal
+from vgs.submodules.comfyui.comfyui_version import __version__
+from vgs.submodules.comfyui.app.frontend_management import FrontendManager
+from vgs.submodules.comfyui.comfy_api.internal import _ComfyNodeInternal
 
-from app.user_manager import UserManager
-from app.model_manager import ModelFileManager
-from app.custom_node_manager import CustomNodeManager
+from vgs.submodules.comfyui.app.user_manager import UserManager
+from vgs.submodules.comfyui.app.model_manager import ModelFileManager
+from vgs.submodules.comfyui.app.custom_node_manager import CustomNodeManager
 from typing import Optional, Union
 from api_server.routes.internal.internal_routes import InternalRoutes
 from protocol import BinaryEventTypes
 
+
 async def send_socket_catch_exception(function, message):
     try:
         await function(message)
-    except (aiohttp.ClientError, aiohttp.ClientPayloadError, ConnectionResetError, BrokenPipeError, ConnectionError) as err:
+    except (
+        aiohttp.ClientError,
+        aiohttp.ClientPayloadError,
+        ConnectionResetError,
+        BrokenPipeError,
+        ConnectionError,
+    ) as err:
         logging.warning("send error: {}".format(err))
+
 
 @web.middleware
 async def cache_control(request: web.Request, handler):
     response: web.Response = await handler(request)
-    if request.path.endswith('.js') or request.path.endswith('.css') or request.path.endswith('index.json'):
-        response.headers.setdefault('Cache-Control', 'no-cache')
+    if (
+        request.path.endswith(".js")
+        or request.path.endswith(".css")
+        or request.path.endswith("index.json")
+    ):
+        response.headers.setdefault("Cache-Control", "no-cache")
     return response
 
 
@@ -547,13 +559,31 @@ class PromptServer():
 
         @routes.get("/system_stats")
         async def system_stats(request):
-            device = comfy.model_management.get_torch_device()
-            device_name = comfy.model_management.get_torch_device_name(device)
-            cpu_device = comfy.model_management.torch.device("cpu")
-            ram_total = comfy.model_management.get_total_memory(cpu_device)
-            ram_free = comfy.model_management.get_free_memory(cpu_device)
-            vram_total, torch_vram_total = comfy.model_management.get_total_memory(device, torch_total_too=True)
-            vram_free, torch_vram_free = comfy.model_management.get_free_memory(device, torch_free_too=True)
+            device = vgs.submodules.comfyui.comfy.model_management.get_torch_device()
+            device_name = (
+                vgs.submodules.comfyui.comfy.model_management.get_torch_device_name(
+                    device
+                )
+            )
+            cpu_device = vgs.submodules.comfyui.comfy.model_management.torch.device(
+                "cpu"
+            )
+            ram_total = vgs.submodules.comfyui.comfy.model_management.get_total_memory(
+                cpu_device
+            )
+            ram_free = vgs.submodules.comfyui.comfy.model_management.get_free_memory(
+                cpu_device
+            )
+            vram_total, torch_vram_total = (
+                vgs.submodules.comfyui.comfy.model_management.get_total_memory(
+                    device, torch_total_too=True
+                )
+            )
+            vram_free, torch_vram_free = (
+                vgs.submodules.comfyui.comfy.model_management.get_free_memory(
+                    device, torch_free_too=True
+                )
+            )
             required_frontend_version = FrontendManager.get_required_frontend_version()
 
             system_stats = {
@@ -564,9 +594,12 @@ class PromptServer():
                     "comfyui_version": __version__,
                     "required_frontend_version": required_frontend_version,
                     "python_version": sys.version,
-                    "pytorch_version": comfy.model_management.torch_version,
-                    "embedded_python": os.path.split(os.path.split(sys.executable)[0])[1] == "python_embeded",
-                    "argv": sys.argv
+                    "pytorch_version": vgs.submodules.comfyui.comfy.model_management.torch_version,
+                    "embedded_python": os.path.split(os.path.split(sys.executable)[0])[
+                        1
+                    ]
+                    == "python_embeded",
+                    "argv": sys.argv,
                 },
                 "devices": [
                     {

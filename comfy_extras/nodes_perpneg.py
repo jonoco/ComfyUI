@@ -53,7 +53,7 @@ class PerpNeg:
         return (m, )
 
 
-class Guider_PerpNeg(comfy.samplers.CFGGuider):
+class Guider_PerpNeg(vgs.submodules.comfyui.comfy.samplers.CFGGuider):
     def set_conds(self, positive, negative, empty_negative_prompt):
         empty_negative_prompt = node_helpers.conditioning_set_values(empty_negative_prompt, {"prompt_type": "negative"})
         self.inner_set_conds({"positive": positive, "empty_negative_prompt": empty_negative_prompt, "negative": negative})

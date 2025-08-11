@@ -4,7 +4,7 @@ import os
 from transformers import T5TokenizerFast
 
 
-class T5XXLModel(comfy.text_encoders.sd3_clip.T5XXLModel):
+class T5XXLModel(vgs.submodules.comfyui.comfy.text_encoders.sd3_clip.T5XXLModel):
     def __init__(self, **kwargs):
         kwargs["attention_mask"] = True
         super().__init__(**kwargs)

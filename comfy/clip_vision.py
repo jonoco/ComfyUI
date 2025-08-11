@@ -71,9 +71,9 @@ class ClipVisionModel():
         out = self.model(pixel_values=pixel_values, intermediate_output=-2)
 
         outputs = Output()
-        outputs["last_hidden_state"] = out[0].to(comfy.model_management.intermediate_device())
-        outputs["image_embeds"] = out[2].to(comfy.model_management.intermediate_device())
-        outputs["penultimate_hidden_states"] = out[1].to(comfy.model_management.intermediate_device())
+        outputs["last_hidden_state"] = out[0].to(vgs.submodules.comfyui.comfy.model_management.intermediate_device())
+        outputs["image_embeds"] = out[2].to(vgs.submodules.comfyui.comfy.model_management.intermediate_device())
+        outputs["penultimate_hidden_states"] = out[1].to(vgs.submodules.comfyui.comfy.model_management.intermediate_device())
         outputs["mm_projected"] = out[3]
         return outputs
 

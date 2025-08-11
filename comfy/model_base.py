@@ -155,7 +155,7 @@ class BaseModel(torch.nn.Module):
         return comfy.patcher_extension.WrapperExecutor.new_class_executor(
             self._apply_model,
             self,
-            comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
+            comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.APPLY_MODEL, transformer_options)
         ).execute(x, t, c_concat, c_crossattn, control, transformer_options, **kwargs)
 
     def _apply_model(self, x, t, c_concat=None, c_crossattn=None, control=None, transformer_options={}, **kwargs):

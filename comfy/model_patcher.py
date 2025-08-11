@@ -130,7 +130,7 @@ class LowVramPatch:
         intermediate_dtype = weight.dtype
         if intermediate_dtype not in [torch.float32, torch.float16, torch.bfloat16]: #intermediate_dtype has to be one that is supported in math ops
             intermediate_dtype = torch.float32
-            return comfy.float.stochastic_rounding(comfy.lora.calculate_weight(self.patches[self.key], weight.to(intermediate_dtype), self.key, intermediate_dtype=intermediate_dtype), weight.dtype, seed=string_to_seed(self.key))
+            return comfy.float.stochastic_rounding(vgs.submodules.comfyui.comfy.lora.calculate_weight(self.patches[self.key], weight.to(intermediate_dtype), self.key, intermediate_dtype=intermediate_dtype), weight.dtype, seed=string_to_seed(self.key))
 
         return comfy.lora.calculate_weight(self.patches[self.key], weight, self.key, intermediate_dtype=intermediate_dtype)
 
@@ -586,7 +586,7 @@ class ModelPatcher:
                     skip = True # skip random weights in non leaf modules
                     break
             if not skip and (hasattr(m, "comfy_cast_weights") or len(params) > 0):
-                loading.append((comfy.model_management.module_size(m), n, m, params))
+                loading.append((vgs.submodules.comfyui.comfy.model_management.module_size(m), n, m, params))
         return loading
 
     def load(self, device_to=None, lowvram_model_memory=0, force_patch_weights=False, full_load=False):
@@ -1029,7 +1029,7 @@ class ModelPatcher:
             registered = comfy.hooks.HookGroup()
         # handle WeightHooks
         weight_hooks_to_register: list[comfy.hooks.WeightHook] = []
-        for hook in hooks.get_type(comfy.hooks.EnumHookType.Weight):
+        for hook in hooks.get_type(vgs.submodules.comfyui.comfy.hooks.EnumHookType.Weight):
             if hook.hook_ref not in self.hook_patches:
                 weight_hooks_to_register.append(hook)
             else:

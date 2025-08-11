@@ -216,9 +216,9 @@ class LoHaAdapter(WeightAdapterBase):
                                 comfy.model_management.cast_to_device(w2b, weight.device, intermediate_dtype),
                                 comfy.model_management.cast_to_device(w2a, weight.device, intermediate_dtype))
         else:
-            m1 = torch.mm(comfy.model_management.cast_to_device(w1a, weight.device, intermediate_dtype),
+            m1 = torch.mm(vgs.submodules.comfyui.comfy.model_management.cast_to_device(w1a, weight.device, intermediate_dtype),
                             comfy.model_management.cast_to_device(w1b, weight.device, intermediate_dtype))
-            m2 = torch.mm(comfy.model_management.cast_to_device(w2a, weight.device, intermediate_dtype),
+            m2 = torch.mm(vgs.submodules.comfyui.comfy.model_management.cast_to_device(w2a, weight.device, intermediate_dtype),
                             comfy.model_management.cast_to_device(w2b, weight.device, intermediate_dtype))
 
         try:

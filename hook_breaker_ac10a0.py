@@ -1,7 +1,7 @@
 # Prevent custom nodes from hooking anything important
-import comfy.model_management
+import vgs.submodules.comfyui.comfy.model_management
 
-HOOK_BREAK = [(comfy.model_management, "cast_to")]
+HOOK_BREAK = [(vgs.submodules.comfyui.comfy.model_management, "cast_to")]
 
 
 SAVED_FUNCTIONS = []

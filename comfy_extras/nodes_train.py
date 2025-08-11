@@ -38,7 +38,7 @@ def make_batch_extra_option_dict(d, indicies, full_size=None):
     return new_dict
 
 
-class TrainSampler(comfy.samplers.Sampler):
+class TrainSampler(vgs.submodules.comfyui.comfy.samplers.Sampler):
     def __init__(self, loss_fn, optimizer, loss_callback=None, batch_size=1, grad_acc=1, total_steps=1, seed=0, training_dtype=torch.bfloat16):
         self.loss_fn = loss_fn
         self.optimizer = optimizer

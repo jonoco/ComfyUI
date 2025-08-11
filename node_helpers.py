@@ -1,9 +1,10 @@
 import hashlib
 import torch
 
-from comfy.cli_args import args
+from vgs.submodules.comfyui.comfy.cli_args import args
 
 from PIL import ImageFile, UnidentifiedImageError
+
 
 def conditioning_set_values(conditioning, values={}, append=False):
     c = []

@@ -12,9 +12,9 @@ import asyncio
 
 import torch
 
-import comfy.model_management
-import nodes
-from comfy_execution.caching import (
+import vgs.submodules.comfyui.comfy.model_management
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui.comfy_execution.caching import (
     BasicCache,
     CacheKeySetID,
     CacheKeySetInputSignature,
@@ -22,18 +22,29 @@ from comfy_execution.caching import (
     HierarchicalCache,
     LRUCache,
 )
-from comfy_execution.graph import (
+from vgs.submodules.comfyui.comfy_execution.graph import (
     DynamicPrompt,
     ExecutionBlocker,
     ExecutionList,
     get_input_info,
 )
-from comfy_execution.graph_utils import GraphBuilder, is_link
-from comfy_execution.validation import validate_node_input
-from comfy_execution.progress import get_progress_state, reset_progress_state, add_progress_handler, WebUIProgressHandler
-from comfy_execution.utils import CurrentNodeContext
-from comfy_api.internal import _ComfyNodeInternal, _NodeOutputInternal, first_real_override, is_class, make_locked_method_func
-from comfy_api.latest import io
+from vgs.submodules.comfyui.comfy_execution.graph_utils import GraphBuilder, is_link
+from vgs.submodules.comfyui.comfy_execution.validation import validate_node_input
+from vgs.submodules.comfyui.comfy_execution.progress import (
+    get_progress_state,
+    reset_progress_state,
+    add_progress_handler,
+    WebUIProgressHandler,
+)
+from vgs.submodules.comfyui.comfy_execution.utils import CurrentNodeContext
+from vgs.submodules.comfyui.comfy_api.internal import (
+    _ComfyNodeInternal,
+    _NodeOutputInternal,
+    first_real_override,
+    is_class,
+    make_locked_method_func,
+)
+from vgs.submodules.comfyui.comfy_api.latest import io
 
 
 class ExecutionResult(Enum):
@@ -41,11 +52,15 @@ class ExecutionResult(Enum):
     FAILURE = 1
     PENDING = 2
 
+
 class DuplicateNodeError(Exception):
     pass
 
+
 class IsChangedCache:
-    def __init__(self, prompt_id: str, dynprompt: DynamicPrompt, outputs_cache: BasicCache):
+    def __init__(
+        self, prompt_id: str, dynprompt: DynamicPrompt, outputs_cache: BasicCache
+    ):
         self.prompt_id = prompt_id
         self.dynprompt = dynprompt
         self.outputs_cache = outputs_cache
@@ -554,7 +569,9 @@ async def execute(server, dynprompt, caches, current_item, extra_data, executed,
             pending_subgraph_results[unique_id] = cached_outputs
             return (ExecutionResult.PENDING, None, None)
         caches.outputs.set(unique_id, output_data)
-    except comfy.model_management.InterruptProcessingException as iex:
+    except (
+        vgs.submodules.comfyui.comfy.model_management.InterruptProcessingException
+    ) as iex:
         logging.info("Processing interrupted")
 
         # skip formatting inputs/outputs
@@ -576,10 +593,10 @@ async def execute(server, dynprompt, caches, current_item, extra_data, executed,
         logging.error(traceback.format_exc())
         tips = ""
 
-        if isinstance(ex, comfy.model_management.OOM_EXCEPTION):
+        if isinstance(ex, vgs.submodules.comfyui.comfy.model_management.OOM_EXCEPTION):
             tips = "This error means you ran out of memory on your GPU.\n\nTIPS: If the workflow worked before you might have accidentally set the batch_size to a large number."
             logging.error("Got an OOM, unloading all loaded models.")
-            comfy.model_management.unload_all_models()
+            vgs.submodules.comfyui.comfy.model_management.unload_all_models()
 
         error_details = {
             "node_id": real_node_id,
@@ -617,13 +634,18 @@ class PromptExecutor:
         if self.server.client_id is not None or broadcast:
             self.server.send_sync(event, data, self.server.client_id)
 
-    def handle_execution_error(self, prompt_id, prompt, current_outputs, executed, error, ex):
+    def handle_execution_error(
+        self, prompt_id, prompt, current_outputs, executed, error, ex
+    ):
         node_id = error["node_id"]
         class_type = prompt[node_id]["class_type"]
 
         # First, send back the status to the frontend depending
         # on the exception type
-        if isinstance(ex, comfy.model_management.InterruptProcessingException):
+        if isinstance(
+            ex,
+            vgs.submodules.comfyui.comfy.model_management.InterruptProcessingException,
+        ):
             mes = {
                 "prompt_id": prompt_id,
                 "node_id": node_id,
@@ -659,13 +681,15 @@ class PromptExecutor:
             self.server.client_id = None
 
         self.status_messages = []
-        self.add_message("execution_start", { "prompt_id": prompt_id}, broadcast=False)
+        self.add_message("execution_start", {"prompt_id": prompt_id}, broadcast=False)
 
         with torch.inference_mode():
             dynamic_prompt = DynamicPrompt(prompt)
             reset_progress_state(prompt_id, dynamic_prompt)
             add_progress_handler(WebUIProgressHandler(self.server))
-            is_changed_cache = IsChangedCache(prompt_id, dynamic_prompt, self.caches.outputs)
+            is_changed_cache = IsChangedCache(
+                prompt_id, dynamic_prompt, self.caches.outputs
+            )
             for cache in self.caches.all:
                 await cache.set_prompt(dynamic_prompt, prompt.keys(), is_changed_cache)
                 cache.clean_unused()
@@ -675,12 +699,14 @@ class PromptExecutor:
                 if self.caches.outputs.get(node_id) is not None:
                     cached_nodes.append(node_id)
 
-            comfy.model_management.cleanup_models_gc()
-            self.add_message("execution_cached",
-                          { "nodes": cached_nodes, "prompt_id": prompt_id},
-                          broadcast=False)
+            vgs.submodules.comfyui.comfy.model_management.cleanup_models_gc()
+            self.add_message(
+                "execution_cached",
+                {"nodes": cached_nodes, "prompt_id": prompt_id},
+                broadcast=False,
+            )
             pending_subgraph_results = {}
-            pending_async_nodes = {} # TODO - Unify this with pending_subgraph_results
+            pending_async_nodes = {}  # TODO - Unify this with pending_subgraph_results
             executed = set()
             execution_list = ExecutionList(dynamic_prompt, self.caches.outputs)
             current_outputs = self.caches.outputs.all_node_ids()
@@ -720,8 +746,8 @@ class PromptExecutor:
                 "meta": meta_outputs,
             }
             self.server.last_node_id = None
-            if comfy.model_management.DISABLE_SMART_MEMORY:
-                comfy.model_management.unload_all_models()
+            if vgs.submodules.comfyui.comfy.model_management.DISABLE_SMART_MEMORY:
+                vgs.submodules.comfyui.comfy.model_management.unload_all_models()
 
 
 async def validate_inputs(prompt_id, prompt, item, validated):

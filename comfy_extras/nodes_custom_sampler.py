@@ -15,7 +15,7 @@ class BasicScheduler:
     def INPUT_TYPES(s):
         return {"required":
                     {"model": ("MODEL",),
-                     "scheduler": (comfy.samplers.SCHEDULER_NAMES, ),
+                     "scheduler": (vgs.submodules.comfyui.comfy.samplers.SCHEDULER_NAMES, ),
                      "steps": ("INT", {"default": 20, "min": 1, "max": 10000}),
                      "denoise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
                       }
@@ -334,7 +334,7 @@ class KSamplerSelect:
     @classmethod
     def INPUT_TYPES(s):
         return {"required":
-                    {"sampler_name": (comfy.samplers.SAMPLER_NAMES, ),
+                    {"sampler_name": (vgs.submodules.comfyui.comfy.samplers.SAMPLER_NAMES, ),
                       }
                }
     RETURN_TYPES = ("SAMPLER",)
@@ -666,7 +666,7 @@ class SamplerCustom:
             out_denoised = out
         return (out, out_denoised)
 
-class Guider_Basic(comfy.samplers.CFGGuider):
+class Guider_Basic(vgs.submodules.comfyui.comfy.samplers.CFGGuider):
     def set_conds(self, positive):
         self.inner_set_conds({"positive": positive})
 
@@ -711,7 +711,7 @@ class CFGGuider:
         guider.set_cfg(cfg)
         return (guider,)
 
-class Guider_DualCFG(comfy.samplers.CFGGuider):
+class Guider_DualCFG(vgs.submodules.comfyui.comfy.samplers.CFGGuider):
     def set_cfg(self, cfg1, cfg2, nested=False):
         self.cfg1 = cfg1
         self.cfg2 = cfg2
@@ -833,7 +833,7 @@ class SamplerCustomAdvanced:
 
         disable_pbar = not comfy.utils.PROGRESS_BAR_ENABLED
         samples = guider.sample(noise.generate_noise(latent), latent_image, sampler, sigmas, denoise_mask=noise_mask, callback=callback, disable_pbar=disable_pbar, seed=noise.seed)
-        samples = samples.to(comfy.model_management.intermediate_device())
+        samples = samples.to(vgs.submodules.comfyui.comfy.model_management.intermediate_device())
 
         out = latent.copy()
         out["samples"] = samples

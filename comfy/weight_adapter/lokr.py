@@ -181,7 +181,7 @@ class LoKrAdapter(WeightAdapterBase):
 
         if w1 is None:
             dim = w1_b.shape[0]
-            w1 = torch.mm(comfy.model_management.cast_to_device(w1_a, weight.device, intermediate_dtype),
+            w1 = torch.mm(vgs.submodules.comfyui.comfy.model_management.cast_to_device(w1_a, weight.device, intermediate_dtype),
                             comfy.model_management.cast_to_device(w1_b, weight.device, intermediate_dtype))
         else:
             w1 = comfy.model_management.cast_to_device(w1, weight.device, intermediate_dtype)
@@ -189,7 +189,7 @@ class LoKrAdapter(WeightAdapterBase):
         if w2 is None:
             dim = w2_b.shape[0]
             if t2 is None:
-                w2 = torch.mm(comfy.model_management.cast_to_device(w2_a, weight.device, intermediate_dtype),
+                w2 = torch.mm(vgs.submodules.comfyui.comfy.model_management.cast_to_device(w2_a, weight.device, intermediate_dtype),
                                 comfy.model_management.cast_to_device(w2_b, weight.device, intermediate_dtype))
             else:
                 w2 = torch.einsum('i j k l, j r, i p -> p r k l',

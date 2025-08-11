@@ -2,7 +2,7 @@ import torch
 from typing import Optional
 import comfy.ldm.modules.diffusionmodules.mmdit
 
-class ControlNet(comfy.ldm.modules.diffusionmodules.mmdit.MMDiT):
+class ControlNet(vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit.MMDiT):
     def __init__(
         self,
         num_blocks = None,

@@ -159,7 +159,7 @@ class disable_weight_init:
             else:
                 return super().forward(*args, **kwargs)
 
-    class RMSNorm(comfy.rmsnorm.RMSNorm, CastWeightBiasOp):
+    class RMSNorm(vgs.submodules.comfyui.comfy.rmsnorm.RMSNorm, CastWeightBiasOp):
         def reset_parameters(self):
             self.bias = None
             return None

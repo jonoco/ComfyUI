@@ -104,7 +104,7 @@ class T2IFinalLayer(nn.Module):
         return output
 
     def forward(self, x, t, output_length):
-        shift, scale = (comfy.model_management.cast_to(self.scale_shift_table[None], device=t.device, dtype=t.dtype) + t[:, None]).chunk(2, dim=1)
+        shift, scale = (vgs.submodules.comfyui.comfy.model_management.cast_to(self.scale_shift_table[None], device=t.device, dtype=t.dtype) + t[:, None]).chunk(2, dim=1)
         x = t2i_modulate(self.norm_final(x), shift, scale)
         x = self.linear(x)
         # unpatchify

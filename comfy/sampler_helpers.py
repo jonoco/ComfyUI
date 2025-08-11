@@ -95,7 +95,7 @@ def get_additional_models_from_model_options(model_options: dict[str]=None):
     models = []
     if model_options is not None and "registered_hooks" in model_options:
         registered: comfy.hooks.HookGroup = model_options["registered_hooks"]
-        for hook in registered.get_type(comfy.hooks.EnumHookType.AdditionalModels):
+        for hook in registered.get_type(vgs.submodules.comfyui.comfy.hooks.EnumHookType.AdditionalModels):
             hook: comfy.hooks.AdditionalModelsHook
             models.extend(hook.models)
     return models
@@ -125,7 +125,7 @@ def estimate_memory(model, noise_shape, conds):
 def prepare_sampling(model: ModelPatcher, noise_shape, conds, model_options=None):
     executor = comfy.patcher_extension.WrapperExecutor.new_executor(
         _prepare_sampling,
-        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.PREPARE_SAMPLING, model_options, is_model_options=True)
+        comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.PREPARE_SAMPLING, model_options, is_model_options=True)
     )
     return executor.execute(model, noise_shape, conds, model_options=model_options)
 
@@ -162,13 +162,13 @@ def prepare_model_patcher(model: 'ModelPatcher', conds, model_options: dict):
     model_options["transformer_options"]["callbacks"] = comfy.patcher_extension.copy_nested_dicts(model.callbacks)
     # begin registering hooks
     registered = comfy.hooks.HookGroup()
-    target_dict = comfy.hooks.create_target_dict(comfy.hooks.EnumWeightTarget.Model)
+    target_dict = comfy.hooks.create_target_dict(vgs.submodules.comfyui.comfy.hooks.EnumWeightTarget.Model)
     # handle all TransformerOptionsHooks
-    for hook in hooks.get_type(comfy.hooks.EnumHookType.TransformerOptions):
+    for hook in hooks.get_type(vgs.submodules.comfyui.comfy.hooks.EnumHookType.TransformerOptions):
         hook: comfy.hooks.TransformerOptionsHook
         hook.add_hook_patches(model, model_options, target_dict, registered)
     # handle all AddModelsHooks
-    for hook in hooks.get_type(comfy.hooks.EnumHookType.AdditionalModels):
+    for hook in hooks.get_type(vgs.submodules.comfyui.comfy.hooks.EnumHookType.AdditionalModels):
         hook: comfy.hooks.AdditionalModelsHook
         hook.add_hook_patches(model, model_options, target_dict, registered)
     # handle all WeightHooks by registering on ModelPatcher

@@ -21,21 +21,29 @@ import safetensors.torch
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "comfy"))
 
-import comfy.diffusers_load
-import comfy.samplers
-import comfy.sample
-import comfy.sd
-import comfy.utils
-import comfy.controlnet
-from comfy.comfy_types import IO, ComfyNodeABC, InputTypeDict, FileLocator
-from comfy_api.internal import register_versions, ComfyAPIWithVersion
-from comfy_api.version_list import supported_versions
-from comfy_api.latest import io, ComfyExtension
+import vgs.submodules.comfyui.comfy.diffusers_load
+import vgs.submodules.comfyui.comfy.samplers
+import vgs.submodules.comfyui.comfy.sample
+import vgs.submodules.comfyui.comfy.sd
+import vgs.submodules.comfyui.comfy.utils
+import vgs.submodules.comfyui.comfy.controlnet
+from vgs.submodules.comfyui.comfy.comfy_types import (
+    IO,
+    ComfyNodeABC,
+    InputTypeDict,
+    FileLocator,
+)
+from vgs.submodules.comfyui.comfy_api.internal import (
+    register_versions,
+    ComfyAPIWithVersion,
+)
+from vgs.submodules.comfyui.comfy_api.version_list import supported_versions
+from vgs.submodules.comfyui.comfy_api.latest import io, ComfyExtension
 
-import comfy.clip_vision
+import vgs.submodules.comfyui.comfy.clip_vision
 
-import comfy.model_management
-from comfy.cli_args import args
+import vgs.submodules.comfyui.comfy.model_management
+from vgs.submodules.comfyui.comfy.cli_args import args
 
 import importlib
 
@@ -43,25 +51,42 @@ import folder_paths
 import latent_preview
 import node_helpers
 
+
 def before_node_execution():
-    comfy.model_management.throw_exception_if_processing_interrupted()
+    vgs.submodules.comfyui.comfy.model_management.throw_exception_if_processing_interrupted()
+
 
 def interrupt_processing(value=True):
-    comfy.model_management.interrupt_current_processing(value)
+    vgs.submodules.comfyui.comfy.model_management.interrupt_current_processing(value)
 
-MAX_RESOLUTION=16384
+
+MAX_RESOLUTION = 16384
+
 
 class CLIPTextEncode(ComfyNodeABC):
     @classmethod
     def INPUT_TYPES(s) -> InputTypeDict:
         return {
             "required": {
-                "text": (IO.STRING, {"multiline": True, "dynamicPrompts": True, "tooltip": "The text to be encoded."}),
-                "clip": (IO.CLIP, {"tooltip": "The CLIP model used for encoding the text."})
+                "text": (
+                    IO.STRING,
+                    {
+                        "multiline": True,
+                        "dynamicPrompts": True,
+                        "tooltip": "The text to be encoded.",
+                    },
+                ),
+                "clip": (
+                    IO.CLIP,
+                    {"tooltip": "The CLIP model used for encoding the text."},
+                ),
             }
         }
+
     RETURN_TYPES = (IO.CONDITIONING,)
-    OUTPUT_TOOLTIPS = ("A conditioning containing the embedded text used to guide the diffusion model.",)
+    OUTPUT_TOOLTIPS = (
+        "A conditioning containing the embedded text used to guide the diffusion model.",
+    )
     FUNCTION = "encode"
 
     CATEGORY = "conditioning"
@@ -500,8 +525,10 @@ class SaveLatent:
         output["latent_tensor"] = samples["samples"].contiguous()
         output["latent_format_version_0"] = torch.tensor([])
 
-        comfy.utils.save_torch_file(output, file, metadata=metadata)
-        return { "ui": { "latents": results } }
+        vgs.submodules.comfyui.comfy.utils.save_torch_file(
+            output, file, metadata=metadata
+        )
+        return {"ui": {"latents": results}}
 
 
 class LoadLatent:
@@ -554,7 +581,14 @@ class CheckpointLoader:
     def load_checkpoint(self, config_name, ckpt_name):
         config_path = folder_paths.get_full_path("configs", config_name)
         ckpt_path = folder_paths.get_full_path_or_raise("checkpoints", ckpt_name)
-        return comfy.sd.load_checkpoint(config_path, ckpt_path, output_vae=True, output_clip=True, embedding_directory=folder_paths.get_folder_paths("embeddings"))
+        return vgs.submodules.comfy.sd.load_checkpoint(
+            config_path,
+            ckpt_path,
+            output_vae=True,
+            output_clip=True,
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+        )
+
 
 class CheckpointLoaderSimple:
     @classmethod
@@ -575,7 +609,12 @@ class CheckpointLoaderSimple:
 
     def load_checkpoint(self, ckpt_name):
         ckpt_path = folder_paths.get_full_path_or_raise("checkpoints", ckpt_name)
-        out = comfy.sd.load_checkpoint_guess_config(ckpt_path, output_vae=True, output_clip=True, embedding_directory=folder_paths.get_folder_paths("embeddings"))
+        out = vgs.submodules.comfyui.comfy.sd.load_checkpoint_guess_config(
+            ckpt_path,
+            output_vae=True,
+            output_clip=True,
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+        )
         return out[:3]
 
 class DiffusersLoader:
@@ -602,7 +641,12 @@ class DiffusersLoader:
                     model_path = path
                     break
 
-        return comfy.diffusers_load.load_diffusers(model_path, output_vae=output_vae, output_clip=output_clip, embedding_directory=folder_paths.get_folder_paths("embeddings"))
+        return vgs.submodules.comfy.diffusers_load.load_diffusers(
+            model_path,
+            output_vae=output_vae,
+            output_clip=output_clip,
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+        )
 
 
 class unCLIPCheckpointLoader:
@@ -617,7 +661,13 @@ class unCLIPCheckpointLoader:
 
     def load_checkpoint(self, ckpt_name, output_vae=True, output_clip=True):
         ckpt_path = folder_paths.get_full_path_or_raise("checkpoints", ckpt_name)
-        out = comfy.sd.load_checkpoint_guess_config(ckpt_path, output_vae=True, output_clip=True, output_clipvision=True, embedding_directory=folder_paths.get_folder_paths("embeddings"))
+        out = vgs.submodules.comfyui.comfy.sd.load_checkpoint_guess_config(
+            ckpt_path,
+            output_vae=True,
+            output_clip=True,
+            output_clipvision=True,
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+        )
         return out
 
 class CLIPSetLastLayer:
@@ -672,10 +722,14 @@ class LoraLoader:
                 self.loaded_lora = None
 
         if lora is None:
-            lora = comfy.utils.load_torch_file(lora_path, safe_load=True)
+            lora = vgs.submodules.comfyui.comfy.utils.load_torch_file(
+                lora_path, safe_load=True
+            )
             self.loaded_lora = (lora_path, lora)
 
-        model_lora, clip_lora = comfy.sd.load_lora_for_models(model, clip, lora, strength_model, strength_clip)
+        model_lora, clip_lora = vgs.submodules.comfyui.comfy.sd.load_lora_for_models(
+            model, clip, lora, strength_model, strength_clip
+        )
         return (model_lora, clip_lora)
 
 class LoraLoaderModelOnly(LoraLoader):
@@ -740,11 +794,15 @@ class VAELoader:
         encoder = next(filter(lambda a: a.startswith("{}_encoder.".format(name)), approx_vaes))
         decoder = next(filter(lambda a: a.startswith("{}_decoder.".format(name)), approx_vaes))
 
-        enc = comfy.utils.load_torch_file(folder_paths.get_full_path_or_raise("vae_approx", encoder))
+        enc = vgs.submodules.comfyui.comfy.utils.load_torch_file(
+            folder_paths.get_full_path_or_raise("vae_approx", encoder)
+        )
         for k in enc:
             sd["taesd_encoder.{}".format(k)] = enc[k]
 
-        dec = comfy.utils.load_torch_file(folder_paths.get_full_path_or_raise("vae_approx", decoder))
+        dec = vgs.submodules.comfyui.comfy.utils.load_torch_file(
+            folder_paths.get_full_path_or_raise("vae_approx", decoder)
+        )
         for k in dec:
             sd["taesd_decoder.{}".format(k)] = dec[k]
 
@@ -776,8 +834,8 @@ class VAELoader:
             sd = self.load_taesd(vae_name)
         else:
             vae_path = folder_paths.get_full_path_or_raise("vae", vae_name)
-            sd = comfy.utils.load_torch_file(vae_path)
-        vae = comfy.sd.VAE(sd=sd)
+            sd = vgs.submodules.comfyui.comfy.utils.load_torch_file(vae_path)
+        vae = vgs.submodules.comfyui.comfy.sd.VAE(sd=sd)
         vae.throw_exception_if_invalid()
         return (vae,)
 
@@ -792,8 +850,12 @@ class ControlNetLoader:
     CATEGORY = "loaders"
 
     def load_controlnet(self, control_net_name):
-        controlnet_path = folder_paths.get_full_path_or_raise("controlnet", control_net_name)
-        controlnet = comfy.controlnet.load_controlnet(controlnet_path)
+        controlnet_path = folder_paths.get_full_path_or_raise(
+            "controlnet", control_net_name
+        )
+        controlnet = vgs.submodules.comfyui.comfy.controlnet.load_controlnet(
+            controlnet_path
+        )
         if controlnet is None:
             raise RuntimeError("ERROR: controlnet file is invalid and does not contain a valid controlnet model.")
         return (controlnet,)
@@ -810,8 +872,12 @@ class DiffControlNetLoader:
     CATEGORY = "loaders"
 
     def load_controlnet(self, model, control_net_name):
-        controlnet_path = folder_paths.get_full_path_or_raise("controlnet", control_net_name)
-        controlnet = comfy.controlnet.load_controlnet(controlnet_path, model)
+        controlnet_path = folder_paths.get_full_path_or_raise(
+            "controlnet", control_net_name
+        )
+        controlnet = vgs.submodules.comfyui.comfy.controlnet.load_controlnet(
+            controlnet_path, model
+        )
         return (controlnet,)
 
 
@@ -918,7 +984,9 @@ class UNETLoader:
             model_options["dtype"] = torch.float8_e5m2
 
         unet_path = folder_paths.get_full_path_or_raise("diffusion_models", unet_name)
-        model = comfy.sd.load_diffusion_model(unet_path, model_options=model_options)
+        model = vgs.submodules.comfyui.comfy.sd.load_diffusion_model(
+            unet_path, model_options=model_options
+        )
         return (model,)
 
 class CLIPLoader:
@@ -938,14 +1006,23 @@ class CLIPLoader:
     DESCRIPTION = "[Recipes]\n\nstable_diffusion: clip-l\nstable_cascade: clip-g\nsd3: t5 xxl/ clip-g / clip-l\nstable_audio: t5 base\nmochi: t5 xxl\ncosmos: old t5 xxl\nlumina2: gemma 2 2B\nwan: umt5 xxl\n hidream: llama-3.1 (Recommend) or t5\nomnigen2: qwen vl 2.5 3B"
 
     def load_clip(self, clip_name, type="stable_diffusion", device="default"):
-        clip_type = getattr(comfy.sd.CLIPType, type.upper(), comfy.sd.CLIPType.STABLE_DIFFUSION)
+        clip_type = getattr(
+            vgs.submodules.comfyui.comfy.sd.CLIPType,
+            type.upper(),
+            vgs.submodules.comfyui.comfy.sd.CLIPType.STABLE_DIFFUSION,
+        )
 
         model_options = {}
         if device == "cpu":
             model_options["load_device"] = model_options["offload_device"] = torch.device("cpu")
 
         clip_path = folder_paths.get_full_path_or_raise("text_encoders", clip_name)
-        clip = comfy.sd.load_clip(ckpt_paths=[clip_path], embedding_directory=folder_paths.get_folder_paths("embeddings"), clip_type=clip_type, model_options=model_options)
+        clip = vgs.submodules.comfyui.comfy.sd.load_clip(
+            ckpt_paths=[clip_path],
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+            clip_type=clip_type,
+            model_options=model_options,
+        )
         return (clip,)
 
 class DualCLIPLoader:
@@ -966,7 +1043,11 @@ class DualCLIPLoader:
     DESCRIPTION = "[Recipes]\n\nsdxl: clip-l, clip-g\nsd3: clip-l, clip-g / clip-l, t5 / clip-g, t5\nflux: clip-l, t5\nhidream: at least one of t5 or llama, recommended t5 and llama"
 
     def load_clip(self, clip_name1, clip_name2, type, device="default"):
-        clip_type = getattr(comfy.sd.CLIPType, type.upper(), comfy.sd.CLIPType.STABLE_DIFFUSION)
+        clip_type = getattr(
+            vgs.submodules.comfyui.comfy.sd.CLIPType,
+            type.upper(),
+            vgs.submodules.comfyui.comfy.sd.CLIPType.STABLE_DIFFUSION,
+        )
 
         clip_path1 = folder_paths.get_full_path_or_raise("text_encoders", clip_name1)
         clip_path2 = folder_paths.get_full_path_or_raise("text_encoders", clip_name2)
@@ -975,7 +1056,12 @@ class DualCLIPLoader:
         if device == "cpu":
             model_options["load_device"] = model_options["offload_device"] = torch.device("cpu")
 
-        clip = comfy.sd.load_clip(ckpt_paths=[clip_path1, clip_path2], embedding_directory=folder_paths.get_folder_paths("embeddings"), clip_type=clip_type, model_options=model_options)
+        clip = vgs.submodules.comfyui.comfy.sd.load_clip(
+            ckpt_paths=[clip_path1, clip_path2],
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+            clip_type=clip_type,
+            model_options=model_options,
+        )
         return (clip,)
 
 class CLIPVisionLoader:
@@ -990,7 +1076,7 @@ class CLIPVisionLoader:
 
     def load_clip(self, clip_name):
         clip_path = folder_paths.get_full_path_or_raise("clip_vision", clip_name)
-        clip_vision = comfy.clip_vision.load(clip_path)
+        clip_vision = vgs.submodules.comfyui.comfy.clip_vision.load(clip_path)
         if clip_vision is None:
             raise RuntimeError("ERROR: clip vision file is invalid and does not contain a valid vision model.")
         return (clip_vision,)
@@ -1025,8 +1111,10 @@ class StyleModelLoader:
     CATEGORY = "loaders"
 
     def load_style_model(self, style_model_name):
-        style_model_path = folder_paths.get_full_path_or_raise("style_models", style_model_name)
-        style_model = comfy.sd.load_style_model(style_model_path)
+        style_model_path = folder_paths.get_full_path_or_raise(
+            "style_models", style_model_name
+        )
+        style_model = vgs.submodules.comfyui.comfy.sd.load_style_model(style_model_path)
         return (style_model,)
 
 
@@ -1123,7 +1211,7 @@ class GLIGENLoader:
 
     def load_gligen(self, gligen_name):
         gligen_path = folder_paths.get_full_path_or_raise("gligen", gligen_name)
-        gligen = comfy.sd.load_gligen(gligen_path)
+        gligen = vgs.submodules.comfyui.comfy.sd.load_gligen(gligen_path)
         return (gligen,)
 
 class GLIGENTextBoxApply:
@@ -1159,7 +1247,9 @@ class GLIGENTextBoxApply:
 
 class EmptyLatentImage:
     def __init__(self):
-        self.device = comfy.model_management.intermediate_device()
+        self.device = (
+            vgs.submodules.comfyui.comfy.model_management.intermediate_device()
+        )
 
     @classmethod
     def INPUT_TYPES(s):
@@ -1271,7 +1361,9 @@ class LatentUpscale:
                 width = max(64, width)
                 height = max(64, height)
 
-            s["samples"] = comfy.utils.common_upscale(samples["samples"], width // 8, height // 8, upscale_method, crop)
+            s["samples"] = vgs.submodules.comfyui.comfy.utils.common_upscale(
+                samples["samples"], width // 8, height // 8, upscale_method, crop
+            )
         return (s,)
 
 class LatentUpscaleBy:
@@ -1290,7 +1382,9 @@ class LatentUpscaleBy:
         s = samples.copy()
         width = round(samples["samples"].shape[-1] * scale_by)
         height = round(samples["samples"].shape[-2] * scale_by)
-        s["samples"] = comfy.utils.common_upscale(samples["samples"], width, height, upscale_method, "disabled")
+        s["samples"] = vgs.submodules.comfyui.comfy.utils.common_upscale(
+            samples["samples"], width, height, upscale_method, "disabled"
+        )
         return (s,)
 
 class LatentRotate:
@@ -1406,7 +1500,9 @@ class LatentBlend:
 
         if samples1.shape != samples2.shape:
             samples2.permute(0, 3, 1, 2)
-            samples2 = comfy.utils.common_upscale(samples2, samples1.shape[3], samples1.shape[2], 'bicubic', crop='center')
+            samples2 = vgs.submodules.comfyui.comfy.utils.common_upscale(
+                samples2, samples1.shape[3], samples1.shape[2], "bicubic", crop="center"
+            )
             samples2.permute(0, 2, 3, 1)
 
         samples_blended = self.blend_mode(samples1, samples2, blend_mode)
@@ -1471,23 +1567,44 @@ class SetLatentNoiseMask:
 
 def common_ksampler(model, seed, steps, cfg, sampler_name, scheduler, positive, negative, latent, denoise=1.0, disable_noise=False, start_step=None, last_step=None, force_full_denoise=False):
     latent_image = latent["samples"]
-    latent_image = comfy.sample.fix_empty_latent_channels(model, latent_image)
+    latent_image = vgs.submodules.comfyui.comfy.sample.fix_empty_latent_channels(
+        model, latent_image
+    )
 
     if disable_noise:
         noise = torch.zeros(latent_image.size(), dtype=latent_image.dtype, layout=latent_image.layout, device="cpu")
     else:
         batch_inds = latent["batch_index"] if "batch_index" in latent else None
-        noise = comfy.sample.prepare_noise(latent_image, seed, batch_inds)
+        noise = vgs.submodules.comfyui.comfy.sample.prepare_noise(
+            latent_image, seed, batch_inds
+        )
 
     noise_mask = None
     if "noise_mask" in latent:
         noise_mask = latent["noise_mask"]
 
     callback = latent_preview.prepare_callback(model, steps)
-    disable_pbar = not comfy.utils.PROGRESS_BAR_ENABLED
-    samples = comfy.sample.sample(model, noise, steps, cfg, sampler_name, scheduler, positive, negative, latent_image,
-                                  denoise=denoise, disable_noise=disable_noise, start_step=start_step, last_step=last_step,
-                                  force_full_denoise=force_full_denoise, noise_mask=noise_mask, callback=callback, disable_pbar=disable_pbar, seed=seed)
+    disable_pbar = not vgs.submodules.comfyui.comfy.utils.PROGRESS_BAR_ENABLED
+    samples = vgs.submodules.comfyui.comfy.sample.sample(
+        model,
+        noise,
+        steps,
+        cfg,
+        sampler_name,
+        scheduler,
+        positive,
+        negative,
+        latent_image,
+        denoise=denoise,
+        disable_noise=disable_noise,
+        start_step=start_step,
+        last_step=last_step,
+        force_full_denoise=force_full_denoise,
+        noise_mask=noise_mask,
+        callback=callback,
+        disable_pbar=disable_pbar,
+        seed=seed,
+    )
     out = latent.copy()
     out["samples"] = samples
     return (out, )
@@ -1797,8 +1914,10 @@ class ImageScale:
             elif height == 0:
                 height = max(1, round(samples.shape[2] * width / samples.shape[3]))
 
-            s = comfy.utils.common_upscale(samples, width, height, upscale_method, crop)
-            s = s.movedim(1,-1)
+            s = vgs.submodules.comfyui.comfy.utils.common_upscale(
+                samples, width, height, upscale_method, crop
+            )
+            s = s.movedim(1, -1)
         return (s,)
 
 class ImageScaleBy:
@@ -1817,8 +1936,10 @@ class ImageScaleBy:
         samples = image.movedim(-1,1)
         width = round(samples.shape[3] * scale_by)
         height = round(samples.shape[2] * scale_by)
-        s = comfy.utils.common_upscale(samples, width, height, upscale_method, "disabled")
-        s = s.movedim(1,-1)
+        s = vgs.submodules.comfyui.comfy.utils.common_upscale(
+            samples, width, height, upscale_method, "disabled"
+        )
+        s = s.movedim(1, -1)
         return (s,)
 
 class ImageInvert:
@@ -1849,7 +1970,13 @@ class ImageBatch:
 
     def batch(self, image1, image2):
         if image1.shape[1:] != image2.shape[1:]:
-            image2 = comfy.utils.common_upscale(image2.movedim(-1,1), image1.shape[2], image1.shape[1], "bilinear", "center").movedim(1,-1)
+            image2 = vgs.submodules.comfyui.comfy.utils.common_upscale(
+                image2.movedim(-1, 1),
+                image1.shape[2],
+                image1.shape[1],
+                "bilinear",
+                "center",
+            ).movedim(1, -1)
         s = torch.cat((image1, image2), dim=0)
         return (s,)
 
@@ -2131,7 +2258,7 @@ async def load_custom_node(module_path: str, ignore=set(), module_parent="custom
         LOADED_MODULE_DIRS[module_name] = os.path.abspath(module_dir)
 
         try:
-            from comfy_config import config_parser
+            from vgs.submodules.comfyui.comfy_config import config_parser
 
             project_config = config_parser.extract_node_configuration(module_path)
 

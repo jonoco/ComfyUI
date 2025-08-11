@@ -6,7 +6,7 @@ import torch
 import node_helpers
 
 
-class LCM(comfy.model_sampling.EPS):
+class LCM(vgs.submodules.comfyui.comfy.model_sampling.EPS):
     def calculate_denoised(self, sigma, model_output, model_input):
         timestep = self.timestep(sigma).view(sigma.shape[:1] + (1,) * (model_output.ndim - 1))
         sigma = sigma.view(sigma.shape[:1] + (1,) * (model_output.ndim - 1))
@@ -20,7 +20,7 @@ class LCM(comfy.model_sampling.EPS):
 
         return c_out * x0 + c_skip * model_input
 
-class ModelSamplingDiscreteDistilled(comfy.model_sampling.ModelSamplingDiscrete):
+class ModelSamplingDiscreteDistilled(vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingDiscrete):
     original_timesteps = 50
 
     def __init__(self, model_config=None, zsnr=None):
@@ -251,7 +251,7 @@ class ModelSamplingContinuousV:
         if sampling == "v_prediction":
             sampling_type = comfy.model_sampling.V_PREDICTION
 
-        class ModelSamplingAdvanced(comfy.model_sampling.ModelSamplingContinuousV, sampling_type):
+        class ModelSamplingAdvanced(vgs.submodules.comfyui.comfy.model_sampling.ModelSamplingContinuousV, sampling_type):
             pass
 
         model_sampling = ModelSamplingAdvanced(model.model.model_config)

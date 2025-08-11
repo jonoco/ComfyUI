@@ -1,23 +1,33 @@
 import torch
 from PIL import Image
-from comfy.cli_args import args, LatentPreviewMethod
-from comfy.taesd.taesd import TAESD
-import comfy.model_management
+from vgs.submodules.comfyui.comfy.cli_args import args, LatentPreviewMethod
+from vgs.submodules.comfyui.comfy.taesd.taesd import TAESD
+import vgs.submodules.comfyui.comfy.model_management
 import folder_paths
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 import logging
 
 MAX_PREVIEW_RESOLUTION = args.preview_size
 
-def preview_to_image(latent_image):
-        latents_ubyte = (((latent_image + 1.0) / 2.0).clamp(0, 1)  # change scale from -1..1 to 0..1
-                            .mul(0xFF)  # to 0..255
-                            )
-        if comfy.model_management.directml_enabled:
-                latents_ubyte = latents_ubyte.to(dtype=torch.uint8)
-        latents_ubyte = latents_ubyte.to(device="cpu", dtype=torch.uint8, non_blocking=comfy.model_management.device_supports_non_blocking(latent_image.device))
 
-        return Image.fromarray(latents_ubyte.numpy())
+def preview_to_image(latent_image):
+    latents_ubyte = (
+        ((latent_image + 1.0) / 2.0)
+        .clamp(0, 1)  # change scale from -1..1 to 0..1
+        .mul(0xFF)  # to 0..255
+    )
+    if vgs.submodules.comfyui.comfy.model_management.directml_enabled:
+        latents_ubyte = latents_ubyte.to(dtype=torch.uint8)
+    latents_ubyte = latents_ubyte.to(
+        device="cpu",
+        dtype=torch.uint8,
+        non_blocking=vgs.submodules.comfyui.comfy.model_management.device_supports_non_blocking(
+            latent_image.device
+        ),
+    )
+
+    return Image.fromarray(latents_ubyte.numpy())
+
 
 class LatentPreviewer:
     def decode_latent_to_preview(self, x0):
@@ -95,7 +105,8 @@ def prepare_callback(model, steps, x0_output_dict=None):
 
     previewer = get_previewer(model.load_device, model.model.latent_format)
 
-    pbar = comfy.utils.ProgressBar(steps)
+    pbar = vgs.submodules.comfyui.comfy.utils.ProgressBar(steps)
+
     def callback(step, x0, x, total_steps):
         if x0_output_dict is not None:
             x0_output_dict["x0"] = x0

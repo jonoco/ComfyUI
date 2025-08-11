@@ -104,7 +104,7 @@ class Blur:
         if blur_radius == 0:
             return (image,)
 
-        image = image.to(comfy.model_management.get_torch_device())
+        image = image.to(vgs.submodules.comfyui.comfy.model_management.get_torch_device())
         batch_size, height, width, channels = image.shape
 
         kernel_size = blur_radius * 2 + 1
@@ -115,7 +115,7 @@ class Blur:
         blurred = F.conv2d(padded_image, kernel, padding=kernel_size // 2, groups=channels)[:,:,blur_radius:-blur_radius, blur_radius:-blur_radius]
         blurred = blurred.permute(0, 2, 3, 1)
 
-        return (blurred.to(comfy.model_management.intermediate_device()),)
+        return (blurred.to(vgs.submodules.comfyui.comfy.model_management.intermediate_device()),)
 
 class Quantize:
     def __init__(self):
@@ -229,7 +229,7 @@ class Sharpen:
             return (image,)
 
         batch_size, height, width, channels = image.shape
-        image = image.to(comfy.model_management.get_torch_device())
+        image = image.to(vgs.submodules.comfyui.comfy.model_management.get_torch_device())
 
         kernel_size = sharpen_radius * 2 + 1
         kernel = gaussian_kernel(kernel_size, sigma, device=image.device) * -(alpha*10)
@@ -244,7 +244,7 @@ class Sharpen:
 
         result = torch.clamp(sharpened, 0, 1)
 
-        return (result.to(comfy.model_management.intermediate_device()),)
+        return (result.to(vgs.submodules.comfyui.comfy.model_management.intermediate_device()),)
 
 class ImageScaleToTotalPixels:
     upscale_methods = ["nearest-exact", "bilinear", "area", "bicubic", "lanczos"]

@@ -89,7 +89,7 @@ class FuseModule(nn.Module):
         updated_prompt_embeds = prompt_embeds.view(batch_size, seq_length, -1)
         return updated_prompt_embeds
 
-class PhotoMakerIDEncoder(comfy.clip_model.CLIPVisionModelProjection):
+class PhotoMakerIDEncoder(vgs.submodules.comfyui.comfy.clip_model.CLIPVisionModelProjection):
     def __init__(self):
         self.load_device = comfy.model_management.text_encoder_device()
         offload_device = comfy.model_management.text_encoder_offload_device()

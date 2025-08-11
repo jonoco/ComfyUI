@@ -38,7 +38,7 @@ class Morphology:
             output = bottom_hat(image_k, kernel)
         else:
             raise ValueError(f"Invalid operation {operation} for morphology. Must be one of 'erode', 'dilate', 'open', 'close', 'gradient', 'tophat', 'bottomhat'")
-        img_out = output.to(comfy.model_management.intermediate_device()).movedim(1, -1)
+        img_out = output.to(vgs.submodules.comfyui.comfy.model_management.intermediate_device()).movedim(1, -1)
         return (img_out,)
 
 

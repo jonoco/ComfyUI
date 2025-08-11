@@ -212,9 +212,9 @@ class WanAttentionBlock(nn.Module):
         # assert e.dtype == torch.float32
 
         if e.ndim < 4:
-            e = (comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device) + e).chunk(6, dim=1)
+            e = (vgs.submodules.comfyui.comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device) + e).chunk(6, dim=1)
         else:
-            e = (comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device).unsqueeze(0) + e).unbind(2)
+            e = (vgs.submodules.comfyui.comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device).unsqueeze(0) + e).unbind(2)
         # assert e[0].dtype == torch.float32
 
         # self-attention
@@ -338,9 +338,9 @@ class Head(nn.Module):
         """
         # assert e.dtype == torch.float32
         if e.ndim < 3:
-            e = (comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device) + e.unsqueeze(1)).chunk(2, dim=1)
+            e = (vgs.submodules.comfyui.comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device) + e.unsqueeze(1)).chunk(2, dim=1)
         else:
-            e = (comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device).unsqueeze(0) + e.unsqueeze(2)).unbind(2)
+            e = (vgs.submodules.comfyui.comfy.model_management.cast_to(self.modulation, dtype=x.dtype, device=x.device).unsqueeze(0) + e.unsqueeze(2)).unbind(2)
 
         x = (self.head(self.norm(x) * (1 + repeat_e(e[1], x)) + repeat_e(e[0], x)))
         return x

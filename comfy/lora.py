@@ -357,7 +357,7 @@ def calculate_weight(patches, weight, key, intermediate_dtype=torch.float32, ori
             weight *= strength_model
 
         if isinstance(v, list):
-            v = (calculate_weight(v[1:], v[0][1](comfy.model_management.cast_to_device(v[0][0], weight.device, intermediate_dtype, copy=True), inplace=True), key, intermediate_dtype=intermediate_dtype), )
+            v = (calculate_weight(v[1:], v[0][1](vgs.submodules.comfyui.comfy.model_management.cast_to_device(v[0][0], weight.device, intermediate_dtype, copy=True), inplace=True), key, intermediate_dtype=intermediate_dtype), )
 
         if isinstance(v, weight_adapter.WeightAdapterBase):
             output = v.calculate_weight(weight, key, strength, strength_model, offset, function, intermediate_dtype, original_weights)

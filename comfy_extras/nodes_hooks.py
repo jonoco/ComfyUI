@@ -255,7 +255,7 @@ class SetClipHooks:
             clip.use_clip_schedule = schedule_clip
             if not clip.use_clip_schedule:
                 clip.patcher.forced_hooks.set_keyframes_on_hooks(None)
-            clip.patcher.register_all_hook_patches(hooks, comfy.hooks.create_target_dict(comfy.hooks.EnumWeightTarget.Clip))
+            clip.patcher.register_all_hook_patches(hooks, comfy.hooks.create_target_dict(vgs.submodules.comfyui.comfy.hooks.EnumWeightTarget.Clip))
         return (clip,)
 
 class ConditioningTimestepsRange:
@@ -505,7 +505,7 @@ class CreateHookKeyframesInterpolated:
             "required": {
                 "strength_start": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 10.0, "step": 0.001}, ),
                 "strength_end": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 10.0, "step": 0.001}, ),
-                "interpolation": (comfy.hooks.InterpolationMethod._LIST, ),
+                "interpolation": (vgs.submodules.comfyui.comfy.hooks.InterpolationMethod._LIST, ),
                 "start_percent": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.001}),
                 "end_percent": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.001}),
                 "keyframes_count": ("INT", {"default": 5, "min": 2, "max": 100, "step": 1}),
@@ -538,7 +538,7 @@ class CreateHookKeyframesInterpolated:
             if is_first:
                 guarantee_steps = 1
                 is_first = False
-            prev_hook_kf.add(comfy.hooks.HookKeyframe(strength=strength, start_percent=percent, guarantee_steps=guarantee_steps))
+            prev_hook_kf.add(vgs.submodules.comfyui.comfy.hooks.HookKeyframe(strength=strength, start_percent=percent, guarantee_steps=guarantee_steps))
             if print_keyframes:
                 logging.info(f"Hook Keyframe - start_percent:{percent} = {strength}")
         return (prev_hook_kf,)
@@ -587,7 +587,7 @@ class CreateHookKeyframesFromFloats:
             if is_first:
                 guarantee_steps = 1
                 is_first = False
-            prev_hook_kf.add(comfy.hooks.HookKeyframe(strength=strength, start_percent=percent, guarantee_steps=guarantee_steps))
+            prev_hook_kf.add(vgs.submodules.comfyui.comfy.hooks.HookKeyframe(strength=strength, start_percent=percent, guarantee_steps=guarantee_steps))
             if print_keyframes:
                 logging.info(f"Hook Keyframe - start_percent:{percent} = {strength}")
         return (prev_hook_kf,)
@@ -611,7 +611,7 @@ class SetModelHooksOnCond:
     FUNCTION = "attach_hook"
 
     def attach_hook(self, conditioning, hooks: comfy.hooks.HookGroup):
-        return (comfy.hooks.set_hooks_for_conditioning(conditioning, hooks),)
+        return (vgs.submodules.comfyui.comfy.hooks.set_hooks_for_conditioning(conditioning, hooks),)
 
 
 ###########################################
@@ -640,7 +640,7 @@ class CombineHooks:
                       hooks_A: comfy.hooks.HookGroup=None,
                       hooks_B: comfy.hooks.HookGroup=None):
         candidates = [hooks_A, hooks_B]
-        return (comfy.hooks.HookGroup.combine_all_hooks(candidates),)
+        return (vgs.submodules.comfyui.comfy.hooks.HookGroup.combine_all_hooks(candidates),)
 
 class CombineHooksFour:
     NodeId = 'CombineHooks4'
@@ -669,7 +669,7 @@ class CombineHooksFour:
                       hooks_C: comfy.hooks.HookGroup=None,
                       hooks_D: comfy.hooks.HookGroup=None):
         candidates = [hooks_A, hooks_B, hooks_C, hooks_D]
-        return (comfy.hooks.HookGroup.combine_all_hooks(candidates),)
+        return (vgs.submodules.comfyui.comfy.hooks.HookGroup.combine_all_hooks(candidates),)
 
 class CombineHooksEight:
     NodeId = 'CombineHooks8'
@@ -706,7 +706,7 @@ class CombineHooksEight:
                       hooks_G: comfy.hooks.HookGroup=None,
                       hooks_H: comfy.hooks.HookGroup=None):
         candidates = [hooks_A, hooks_B, hooks_C, hooks_D, hooks_E, hooks_F, hooks_G, hooks_H]
-        return (comfy.hooks.HookGroup.combine_all_hooks(candidates),)
+        return (vgs.submodules.comfyui.comfy.hooks.HookGroup.combine_all_hooks(candidates),)
 #------------------------------------------
 ###########################################
 

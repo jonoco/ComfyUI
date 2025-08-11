@@ -1,30 +1,34 @@
-import comfy.options
-comfy.options.enable_args_parsing()
+import vgs.submodules.comfyui.comfy.options
+
+vgs.submodules.comfyui.comfy.options.enable_args_parsing()
 
 import os
 import importlib.util
 import folder_paths
 import time
-from comfy.cli_args import args
-from app.logger import setup_logger
+from vgs.submodules.comfyui.comfy.cli_args import args
+from vgs.submodules.comfyui.app.logger import setup_logger
 import itertools
 import utils.extra_config
 import logging
 import sys
-from comfy_execution.progress import get_progress_state
-from comfy_execution.utils import get_executing_context
-from comfy_api import feature_flags
+from vgs.submodules.comfyui.comfy_execution.progress import get_progress_state
+from vgs.submodules.comfyui.comfy_execution.utils import get_executing_context
+from vgs.submodules.comfyui.comfy_api import feature_flags
 
 if __name__ == "__main__":
-    #NOTE: These do not do anything on core ComfyUI, they are for custom nodes.
-    os.environ['HF_HUB_DISABLE_TELEMETRY'] = '1'
-    os.environ['DO_NOT_TRACK'] = '1'
+    # NOTE: These do not do anything on core ComfyUI, they are for custom nodes.
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+    os.environ["DO_NOT_TRACK"] = "1"
 
 setup_logger(log_level=args.verbose, use_stdout=args.log_stdout)
 
+
 def apply_custom_paths():
     # extra model paths
-    extra_model_paths_config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "extra_model_paths.yaml")
+    extra_model_paths_config_path = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "extra_model_paths.yaml"
+    )
     if os.path.isfile(extra_model_paths_config_path):
         utils.extra_config.load_extra_path_config(extra_model_paths_config_path)
 
@@ -142,20 +146,22 @@ if __name__ == "__main__":
 if 'torch' in sys.modules:
     logging.warning("WARNING: Potential Error in code: Torch already imported, torch should never be imported before this point.")
 
-import comfy.utils
+import vgs.submodules.comfyui.comfy.utils
 
 import execution
 import server
 from protocol import BinaryEventTypes
-import nodes
-import comfy.model_management
-import comfyui_version
-import app.logger
+from vgs.submodules.comfyui import nodes
+import vgs.submodules.comfyui.comfy.model_management
+import vgs.submodules.comfyui.comfyui_version
+import vgs.submodules.comfyui.app.logger
 import hook_breaker_ac10a0
 
 def cuda_malloc_warning():
-    device = comfy.model_management.get_torch_device()
-    device_name = comfy.model_management.get_torch_device_name(device)
+    device = vgs.submodules.comfyui.comfy.model_management.get_torch_device()
+    device_name = vgs.submodules.comfyui.comfy.model_management.get_torch_device_name(
+        device
+    )
     cuda_malloc_warning = False
     if "cudaMallocAsync" in device_name:
         for b in cuda_malloc.blacklist:
@@ -215,7 +221,7 @@ def prompt_worker(q, server_instance):
         free_memory = flags.get("free_memory", False)
 
         if flags.get("unload_models", free_memory):
-            comfy.model_management.unload_all_models()
+            vgs.submodules.comfyui.comfy.model_management.unload_all_models()
             need_gc = True
             last_gc_collect = 0
 
@@ -228,7 +234,7 @@ def prompt_worker(q, server_instance):
             current_time = time.perf_counter()
             if (current_time - last_gc_collect) > gc_collect_interval:
                 gc.collect()
-                comfy.model_management.soft_empty_cache()
+                vgs.submodules.comfyui.comfy.model_management.soft_empty_cache()
                 last_gc_collect = current_time
                 need_gc = False
                 hook_breaker_ac10a0.restore_functions()
@@ -249,7 +255,7 @@ def hijack_progress(server_instance):
             prompt_id = executing_context.prompt_id
         if node_id is None and executing_context is not None:
             node_id = executing_context.node_id
-        comfy.model_management.throw_exception_if_processing_interrupted()
+        vgs.submodules.comfyui.comfy.model_management.throw_exception_if_processing_interrupted()
         if prompt_id is None:
             prompt_id = server_instance.last_prompt_id
         if node_id is None:
@@ -271,7 +277,7 @@ def hijack_progress(server_instance):
                     server_instance.client_id,
                 )
 
-    comfy.utils.set_progress_bar_global_hook(hook)
+    vgs.submodules.comfyui.comfy.utils.set_progress_bar_global_hook(hook)
 
 
 def cleanup_temp():
@@ -282,7 +288,11 @@ def cleanup_temp():
 
 def setup_database():
     try:
-        from app.database.db import init_db, dependencies_available
+        from vgs.submodules.comfyui.app.database.db import (
+            init_db,
+            dependencies_available,
+        )
+
         if dependencies_available():
             init_db()
     except Exception as e:

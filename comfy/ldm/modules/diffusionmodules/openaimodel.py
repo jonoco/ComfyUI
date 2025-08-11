@@ -831,7 +831,7 @@ class UNetModel(nn.Module):
         return comfy.patcher_extension.WrapperExecutor.new_class_executor(
             self._forward,
             self,
-            comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
+            comfy.patcher_extension.get_all_wrappers(vgs.submodules.comfyui.comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options)
         ).execute(x, timesteps, context, y, control, transformer_options, **kwargs)
 
     def _forward(self, x, timesteps=None, context=None, y=None, control=None, transformer_options={}, **kwargs):

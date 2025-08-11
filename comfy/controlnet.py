@@ -253,7 +253,7 @@ class ControlNet(ControlBase):
                 for c in self.extra_concat_orig:
                     c = c.to(self.cond_hint.device)
                     c = comfy.utils.common_upscale(c, self.cond_hint.shape[3], self.cond_hint.shape[2], self.upscale_algorithm, "center")
-                    to_concat.append(comfy.utils.repeat_to_batch_size(c, self.cond_hint.shape[0]))
+                    to_concat.append(vgs.submodules.comfyui.comfy.utils.repeat_to_batch_size(c, self.cond_hint.shape[0]))
                 self.cond_hint = torch.cat([self.cond_hint] + to_concat, dim=1)
 
             self.cond_hint = self.cond_hint.to(device=x_noisy.device, dtype=dtype)
@@ -378,7 +378,7 @@ class ControlLora(ControlNet):
         controlnet_config["operations"] = control_lora_ops
         controlnet_config["dtype"] = dtype
         self.control_model = comfy.cldm.cldm.ControlNet(**controlnet_config)
-        self.control_model.to(comfy.model_management.get_torch_device())
+        self.control_model.to(vgs.submodules.comfyui.comfy.model_management.get_torch_device())
         diffusion_model = model.diffusion_model
         sd = diffusion_model.state_dict()
 
@@ -392,7 +392,7 @@ class ControlLora(ControlNet):
         for k in self.control_weights:
             if (k not in {"lora_controlnet"}):
                 if (k.endswith(".up") or k.endswith(".down") or k.endswith(".weight") or k.endswith(".bias")) and ("__" not in k):
-                    comfy.utils.set_attr_param(self.control_model, k, self.control_weights[k].to(dtype).to(comfy.model_management.get_torch_device()))
+                    comfy.utils.set_attr_param(self.control_model, k, self.control_weights[k].to(dtype).to(vgs.submodules.comfyui.comfy.model_management.get_torch_device()))
 
     def copy(self):
         c = ControlLora(self.control_weights, global_average_pooling=self.global_average_pooling)
@@ -743,7 +743,7 @@ def load_controlnet(ckpt_path, model=None, model_options={}):
         if filename.endswith("_shuffle") or filename.endswith("_shuffle_fp16"): #TODO: smarter way of enabling global_average_pooling
             model_options["global_average_pooling"] = True
 
-    cnet = load_controlnet_state_dict(comfy.utils.load_torch_file(ckpt_path, safe_load=True), model=model, model_options=model_options)
+    cnet = load_controlnet_state_dict(vgs.submodules.comfyui.comfy.utils.load_torch_file(ckpt_path, safe_load=True), model=model, model_options=model_options)
     if cnet is None:
         logging.error("error checkpoint does not contain controlnet or t2i adapter data {}".format(ckpt_path))
     return cnet
