@@ -5,7 +5,7 @@ import torch.nn as nn
 import numpy as np
 import logging
 
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 import vgs.submodules.comfyui.comfy.ops
 ops = vgs.submodules.comfyui.comfy.ops.disable_weight_init
 

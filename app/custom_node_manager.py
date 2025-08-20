@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import glob
 from aiohttp import web
 import json

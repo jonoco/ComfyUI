@@ -1,5 +1,5 @@
-from comfy import sd1_clip
-from comfy import sdxl_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sdxl_clip
 from transformers import T5TokenizerFast
 import vgs.submodules.comfyui.comfy.text_encoders.t5
 import torch

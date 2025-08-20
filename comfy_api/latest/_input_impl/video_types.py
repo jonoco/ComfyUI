@@ -3,13 +3,13 @@ from av.container import InputContainer
 from av.subtitles.stream import SubtitleStream
 from fractions import Fraction
 from typing import Optional
-from comfy_api.latest._input import AudioInput, VideoInput
+from vgs.submodules.comfyui.comfy_api.latest._input import AudioInput, VideoInput
 import av
 import io
 import json
 import numpy as np
 import torch
-from comfy_api.latest._util import VideoContainer, VideoCodec, VideoComponents
+from vgs.submodules.comfyui.comfy_api.latest._util import VideoContainer, VideoCodec, VideoComponents
 
 
 def container_to_output_format(container_format: str | None) -> str | None:
@@ -320,5 +320,3 @@ class VideoFromComponents(VideoInput):
                 # Flush audio
                 for packet in audio_stream.encode(None):
                     output.mux(packet)
-
-

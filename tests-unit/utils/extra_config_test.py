@@ -5,7 +5,7 @@ import sys
 from unittest.mock import Mock, patch, mock_open
 
 from vgs.submodules.comfyui.utils.extra_config import load_extra_path_config
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 
 @pytest.fixture()

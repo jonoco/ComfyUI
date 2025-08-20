@@ -1,6 +1,6 @@
 import torch
 import vgs.submodules.comfyui.comfy.model_management
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 class TextEncodeAceStepAudio:
     @classmethod

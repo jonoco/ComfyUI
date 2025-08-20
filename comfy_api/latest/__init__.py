@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from typing import Type, TYPE_CHECKING
-from comfy_api.internal import ComfyAPIBase
-from comfy_api.internal.singleton import ProxiedSingleton
-from comfy_api.internal.async_to_sync import create_sync_class
-from comfy_api.latest._input import ImageInput, AudioInput, MaskInput, LatentInput, VideoInput
-from comfy_api.latest._input_impl import VideoFromFile, VideoFromComponents
-from comfy_api.latest._util import VideoCodec, VideoContainer, VideoComponents
-from comfy_api.latest._io import _IO as io  #noqa: F401
-from comfy_api.latest._ui import _UI as ui  #noqa: F401
-# from comfy_api.latest._resources import _RESOURCES as resources  #noqa: F401
-from comfy_execution.utils import get_executing_context
-from comfy_execution.progress import get_progress_state, PreviewImageTuple
+from vgs.submodules.comfyui.comfy_api.internal import ComfyAPIBase
+from vgs.submodules.comfyui.comfy_api.internal.singleton import ProxiedSingleton
+from vgs.submodules.comfyui.comfy_api.internal.async_to_sync import create_sync_class
+from vgs.submodules.comfyui.comfy_api.latest._input import ImageInput, AudioInput, MaskInput, LatentInput, VideoInput
+from vgs.submodules.comfyui.comfy_api.latest._input_impl import VideoFromFile, VideoFromComponents
+from vgs.submodules.comfyui.comfy_api.latest._util import VideoCodec, VideoContainer, VideoComponents
+from vgs.submodules.comfyui.comfy_api.latest._io import _IO as io  #noqa: F401
+from vgs.submodules.comfyui.comfy_api.latest._ui import _UI as ui  #noqa: F401
+# from vgs.submodules.comfyui.comfy_api.latest._resources import _RESOURCES as resources  #noqa: F401
+from vgs.submodules.comfyui.comfy_execution.utils import get_executing_context
+from vgs.submodules.comfyui.comfy_execution.progress import get_progress_state, PreviewImageTuple
 from PIL import Image
 from vgs.submodules.comfyui.comfy.cli_args import args
 import numpy as np

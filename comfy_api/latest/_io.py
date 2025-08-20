@@ -22,11 +22,11 @@ if TYPE_CHECKING:
     from vgs.submodules.comfyui.comfy.samplers import CFGGuider, Sampler
     from vgs.submodules.comfyui.comfy.sd import CLIP, VAE
     from vgs.submodules.comfyui.comfy.sd import StyleModel as StyleModel_
-    from comfy_api.input import VideoInput
-from comfy_api.internal import (_ComfyNodeInternal, _NodeOutputInternal, classproperty, copy_class, first_real_override, is_class,
+    from vgs.submodules.comfyui.comfy_api.input import VideoInput
+from vgs.submodules.comfyui.comfy_api.internal import (_ComfyNodeInternal, _NodeOutputInternal, classproperty, copy_class, first_real_override, is_class,
     prune_dict, shallow_clone_class)
-from comfy_api.latest._resources import Resources, ResourcesLocal
-from comfy_execution.graph_utils import ExecutionBlocker
+from vgs.submodules.comfyui.comfy_api.latest._resources import Resources, ResourcesLocal
+from vgs.submodules.comfyui.comfy_execution.graph_utils import ExecutionBlocker
 
 # from comfy_extras.nodes_images import SVG as SVG_ # NOTE: needs to be moved before can be imported due to circular reference
 

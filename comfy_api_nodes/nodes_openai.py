@@ -12,7 +12,7 @@ import torch
 from PIL import Image
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 from server import PromptServer
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 
 from comfy_api_nodes.apis import (

@@ -1,4 +1,4 @@
-from comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
 from .spiece_tokenizer import SPieceTokenizer
 import vgs.submodules.comfyui.comfy.text_encoders.t5
 import os

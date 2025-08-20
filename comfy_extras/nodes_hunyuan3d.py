@@ -4,7 +4,7 @@ import json
 import struct
 import numpy as np
 from vgs.submodules.comfyui.comfy.ldm.modules.diffusionmodules.mmdit import get_1d_sincos_pos_embed_from_grid_torch
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import vgs.submodules.comfyui.comfy.model_management
 from vgs.submodules.comfyui.comfy.cli_args import args
 

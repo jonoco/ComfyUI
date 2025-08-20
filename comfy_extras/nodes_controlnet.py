@@ -1,5 +1,5 @@
 from vgs.submodules.comfyui.comfy.cldm.control_types import UNION_CONTROLNET_TYPES
-import nodes
+from vgs.submodules.comfyui import nodes
 import vgs.submodules.comfyui.comfy.utils
 
 class SetUnionControlNetType:

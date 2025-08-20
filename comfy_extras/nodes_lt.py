@@ -1,6 +1,6 @@
 import io
-import nodes
-import node_helpers
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui import node_helpers
 import torch
 import vgs.submodules.comfyui.comfy.model_management
 import vgs.submodules.comfyui.comfy.model_sampling

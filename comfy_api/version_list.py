@@ -1,7 +1,7 @@
-from comfy_api.latest import ComfyAPI_latest
-from comfy_api.v0_0_2 import ComfyAPIAdapter_v0_0_2
-from comfy_api.v0_0_1 import ComfyAPIAdapter_v0_0_1
-from comfy_api.internal import ComfyAPIBase
+from vgs.submodules.comfyui.comfy_api.latest import ComfyAPI_latest
+from vgs.submodules.comfyui.comfy_api.v0_0_2 import ComfyAPIAdapter_v0_0_2
+from vgs.submodules.comfyui.comfy_api.v0_0_1 import ComfyAPIAdapter_v0_0_1
+from vgs.submodules.comfyui.comfy_api.internal import ComfyAPIBase
 from typing import List, Type
 
 supported_versions: List[Type[ComfyAPIBase]] = [
@@ -9,4 +9,3 @@ supported_versions: List[Type[ComfyAPIBase]] = [
     ComfyAPIAdapter_v0_0_2,
     ComfyAPIAdapter_v0_0_1,
 ]
-

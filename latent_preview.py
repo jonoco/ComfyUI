@@ -3,7 +3,7 @@ from PIL import Image
 from vgs.submodules.comfyui.comfy.cli_args import args, LatentPreviewMethod
 from vgs.submodules.comfyui.comfy.taesd.taesd import TAESD
 import vgs.submodules.comfyui.comfy.model_management
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import vgs.submodules.comfyui.comfy.utils
 import logging
 
@@ -116,4 +116,3 @@ def prepare_callback(model, steps, x0_output_dict=None):
             preview_bytes = previewer.decode_latent_to_preview_image(preview_format, x0)
         pbar.update_absolute(step + 1, total_steps, preview_bytes)
     return callback
-

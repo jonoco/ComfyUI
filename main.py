@@ -4,7 +4,7 @@ vgs.submodules.comfyui.comfy.options.enable_args_parsing()
 
 import os
 import importlib.util
-import folder_paths
+import from vgs.submodules.comfyui import folder_paths
 import time
 from vgs.submodules.comfyui.comfy.cli_args import args
 from vgs.submodules.comfyui.app.logger import setup_logger

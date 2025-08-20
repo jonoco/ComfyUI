@@ -13,8 +13,8 @@ import numpy as np
 import torch
 
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeOptions
-from comfy_api.input_impl import VideoFromFile
-from comfy_api.input_impl.video_types import VideoCodec, VideoContainer, VideoInput
+from vgs.submodules.comfyui.comfy_api.input_impl import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl.video_types import VideoCodec, VideoContainer, VideoInput
 from comfy_api_nodes.apinode_utils import (
     download_url_to_video_output,
     tensor_to_bytesio,

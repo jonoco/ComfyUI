@@ -11,7 +11,7 @@ from typing import Optional, Literal
 
 import torch
 
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC, InputTypeDict
 from server import PromptServer
 from comfy_api_nodes.apis import (
@@ -218,7 +218,7 @@ class GeminiNode(ComfyNodeABC):
         Returns:
             List of GeminiPart objects containing the encoded video.
         """
-        from comfy_api.util import VideoContainer, VideoCodec
+        from vgs.submodules.comfyui.comfy_api.util import VideoContainer, VideoCodec
         base_64_string = video_to_base64_string(
             video_input,
             container_format=VideoContainer.MP4,

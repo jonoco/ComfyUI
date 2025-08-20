@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 import vgs.submodules.comfyui.comfy.lora
 import vgs.submodules.comfyui.comfy.model_management
 import vgs.submodules.comfyui.comfy.patcher_extension
-from node_helpers import conditioning_set_values
+from vgs.submodules.comfyui.node_helpers import conditioning_set_values
 
 # #######################################################################################################
 # Hooks explanation

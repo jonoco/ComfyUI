@@ -3,7 +3,7 @@ import logging
 import torch
 
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
-from comfy_api.input_impl.video_types import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl.video_types import VideoFromFile
 from comfy_api_nodes.apis import (
     MinimaxVideoGenerationRequest,
     MinimaxVideoGenerationResponse,

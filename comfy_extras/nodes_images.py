@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import nodes
-import folder_paths
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui import folder_paths
 from vgs.submodules.comfyui.comfy.cli_args import args
 
 from PIL import Image

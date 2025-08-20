@@ -1,4 +1,4 @@
-from comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
 import vgs.submodules.comfyui.comfy.text_encoders.sd3_clip
 import os
 from transformers import T5TokenizerFast

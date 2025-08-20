@@ -2,12 +2,12 @@ import numpy as np
 import scipy.ndimage
 import torch
 import vgs.submodules.comfyui.comfy.utils
-import node_helpers
-import folder_paths
+from vgs.submodules.comfyui import node_helpers
+from vgs.submodules.comfyui import folder_paths
 import random
 
-import nodes
-from nodes import MAX_RESOLUTION
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui.nodes import MAX_RESOLUTION
 
 def composite(destination, source, x, y, mask = None, multiplier = 8, resize_source = False):
     source = source.to(destination.device)

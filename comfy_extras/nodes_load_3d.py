@@ -1,9 +1,9 @@
-import nodes
-import folder_paths
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui import folder_paths
 import os
 
 from vgs.submodules.comfyui.comfy.comfy_types import IO
-from comfy_api.input_impl import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl import VideoFromFile
 
 from pathlib import Path
 

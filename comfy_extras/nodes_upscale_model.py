@@ -1,9 +1,9 @@
 import logging
 from spandrel import ModelLoader, ImageModelDescriptor
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 import torch
 import vgs.submodules.comfyui.comfy.utils
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 try:
     from spandrel_extra_arches import EXTRA_REGISTRY

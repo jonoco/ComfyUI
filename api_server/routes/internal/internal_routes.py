@@ -1,7 +1,7 @@
 from aiohttp import web
 from typing import Optional
-from folder_paths import folder_names_and_paths, get_directory_by_type
-from api_server.services.terminal_service import TerminalService
+from vgs.submodules.comfyui.folder_paths import folder_names_and_paths, get_directory_by_type
+from vgs.submodules.comfyui.api_server.services.terminal_service import TerminalService
 import vgs.submodules.comfyui.app.logger
 import os
 

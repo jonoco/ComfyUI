@@ -1,4 +1,4 @@
-from app.logger import on_flush
+from vgs.submodules.comfyui.app.logger import on_flush
 import os
 import shutil
 

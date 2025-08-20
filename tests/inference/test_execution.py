@@ -13,7 +13,7 @@ import uuid
 import urllib.request
 import urllib.parse
 import urllib.error
-from comfy_execution.graph_utils import GraphBuilder, Node
+from vgs.submodules.comfyui.comfy_execution.graph_utils import GraphBuilder, Node
 
 def run_warmup(client, prefix="warmup"):
     """Run a simple workflow to warm up the server."""
@@ -758,4 +758,3 @@ class TestExecution:
             assert False, "Should have raised an error for empty partial execution list"
         except urllib.error.HTTPError:
             pass  # Expected behavior
-

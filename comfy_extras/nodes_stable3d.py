@@ -1,5 +1,5 @@
 import torch
-import nodes
+from vgs.submodules.comfyui import nodes
 import vgs.submodules.comfyui.comfy.utils
 
 def camera_embeddings(elevation, azimuth):

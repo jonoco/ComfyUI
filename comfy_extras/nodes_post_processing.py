@@ -6,7 +6,7 @@ import math
 
 import vgs.submodules.comfyui.comfy.utils
 import vgs.submodules.comfyui.comfy.model_management
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 class Blend:
     def __init__(self):

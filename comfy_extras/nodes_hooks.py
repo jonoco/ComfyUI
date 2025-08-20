@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 import vgs.submodules.comfyui.comfy.hooks
 import vgs.submodules.comfyui.comfy.sd
 import vgs.submodules.comfyui.comfy.utils
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 ###########################################
 # Mask, Combine, and Hook Conditioning

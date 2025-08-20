@@ -4,7 +4,7 @@ import torch
 from enum import Enum
 import logging
 
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 from vgs.submodules.comfyui.comfy.utils import ProgressBar
 from .ldm.models.autoencoder import AutoencoderKL, AutoencodingEngine
 from .ldm.cascade.stage_a import StageA

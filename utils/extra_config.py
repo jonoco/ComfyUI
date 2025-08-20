@@ -1,6 +1,6 @@
 import os
 import yaml
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import logging
 
 def load_extra_path_config(yaml_path):

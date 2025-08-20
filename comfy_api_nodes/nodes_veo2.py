@@ -6,7 +6,7 @@ import torch
 from typing import Optional
 
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
-from comfy_api.input_impl.video_types import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl.video_types import VideoFromFile
 from comfy_api_nodes.apis import (
     VeoGenVidRequest,
     VeoGenVidResponse,

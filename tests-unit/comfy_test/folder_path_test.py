@@ -7,7 +7,7 @@ import tempfile
 from unittest.mock import patch
 from importlib import reload
 
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import vgs.submodules.comfyui.comfy.cli_args
 from vgs.submodules.comfyui.comfy.options import enable_args_parsing
 enable_args_parsing()

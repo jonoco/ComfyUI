@@ -9,7 +9,7 @@ import logging
 from aiohttp import web
 from urllib import parse
 from vgs.submodules.comfyui.comfy.cli_args import args
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 from .app_settings import AppSettings
 from typing import TypedDict
 

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 import torch
 from functools import partial
 import collections
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 import math
 import logging
 import vgs.submodules.comfyui.comfy.sampler_helpers

@@ -1,5 +1,5 @@
-import nodes
-import node_helpers
+import vgs.submodules.comfyui.nodes
+import vgs.submodules.comfyui.node_helpers
 import torch
 import vgs.submodules.comfyui.comfy.model_management
 

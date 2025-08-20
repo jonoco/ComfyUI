@@ -1,11 +1,11 @@
 import itertools
 from typing import Sequence, Mapping, Dict
-from comfy_execution.graph import DynamicPrompt
+from vgs.submodules.comfyui.comfy_execution.graph import DynamicPrompt
 from abc import ABC, abstractmethod
 
-import nodes
+from vgs.submodules.comfyui import nodes
 
-from comfy_execution.graph_utils import is_link
+from vgs.submodules.comfyui.comfy_execution.graph_utils import is_link
 
 NODE_CLASS_CONTAINS_UNIQUE_ID: Dict[str, bool] = {}
 

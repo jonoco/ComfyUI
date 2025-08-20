@@ -1,7 +1,7 @@
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import vgs.submodules.comfyui.comfy.sd
 import vgs.submodules.comfyui.comfy.model_management
-import nodes
+from vgs.submodules.comfyui import nodes
 import torch
 import comfy_extras.nodes_slg
 

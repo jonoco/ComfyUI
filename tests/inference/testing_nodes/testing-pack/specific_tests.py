@@ -3,7 +3,7 @@ import time
 import asyncio
 from vgs.submodules.comfyui.comfy.utils import ProgressBar
 from .tools import VariantSupport
-from comfy_execution.graph_utils import GraphBuilder
+from vgs.submodules.comfyui.comfy_execution.graph_utils import GraphBuilder
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import ComfyNodeABC
 from vgs.submodules.comfyui.comfy.comfy_types import IO
 

@@ -1,5 +1,5 @@
 import vgs.submodules.comfyui.comfy.utils
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import torch
 import logging
 

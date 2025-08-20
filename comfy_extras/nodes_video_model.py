@@ -1,10 +1,10 @@
-import nodes
+from vgs.submodules.comfyui import nodes
 import torch
 import vgs.submodules.comfyui.comfy.utils
 import vgs.submodules.comfyui.comfy.sd
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import comfy_extras.nodes_model_merging
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 
 class ImageOnlyCheckpointLoader:

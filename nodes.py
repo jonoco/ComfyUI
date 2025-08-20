@@ -47,9 +47,9 @@ from vgs.submodules.comfyui.comfy.cli_args import args
 
 import importlib
 
-import folder_paths
-import latent_preview
-import node_helpers
+from vgs.submodules.comfyui import folder_paths
+from vgs.submodules.comfyui import latent_preview
+from vgs.submodules.comfyui import node_helpers
 
 
 def before_node_execution():

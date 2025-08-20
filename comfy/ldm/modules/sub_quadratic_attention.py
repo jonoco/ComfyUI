@@ -24,7 +24,7 @@ except ImportError:
 
 from typing import List
 
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 
 def dynamic_slice(
     x: Tensor,

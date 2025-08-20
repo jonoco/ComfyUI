@@ -11,7 +11,7 @@ import logging
 from .diffusionmodules.util import AlphaBlender, timestep_embedding
 from .sub_quadratic_attention import efficient_dot_product_attention
 
-from comfy import model_management
+from vgs.submodules.comfyui.comfy import model_management
 
 if model_management.xformers_enabled():
     import xformers
@@ -1031,5 +1031,3 @@ class SpatialVideoTransformer(SpatialTransformer):
             x = self.proj_out(x)
         out = x + x_in
         return out
-
-

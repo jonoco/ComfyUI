@@ -8,9 +8,9 @@ from abc import ABC
 from tqdm import tqdm
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from comfy_execution.graph import DynamicPrompt
-from protocol import BinaryEventTypes
-from comfy_api import feature_flags
+    from vgs.submodules.comfyui.comfy_execution.graph import DynamicPrompt
+from vgs.submodules.comfyui.protocol import BinaryEventTypes
+from vgs.submodules.comfyui.comfy_api import feature_flags
 
 PreviewImageTuple = Tuple[str, Image.Image, Optional[int]]
 
@@ -341,7 +341,7 @@ def add_progress_handler(handler: ProgressHandler) -> None:
 def get_progress_state() -> ProgressRegistry:
     global global_progress_registry
     if global_progress_registry is None:
-        from comfy_execution.graph import DynamicPrompt
+        from vgs.submodules.comfyui.comfy_execution.graph import DynamicPrompt
 
         global_progress_registry = ProgressRegistry(
             prompt_id="", dynprompt=DynamicPrompt({})

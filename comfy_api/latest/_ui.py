@@ -17,11 +17,11 @@ except ImportError:
 from PIL import Image as PILImage
 from PIL.PngImagePlugin import PngInfo
 
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 # used for image preview
 from vgs.submodules.comfyui.comfy.cli_args import args
-from comfy_api.latest._io import ComfyNode, FolderType, Image, _UIOutput
+from vgs.submodules.comfyui.comfy_api.latest._io import ComfyNode, FolderType, Image, _UIOutput
 
 
 class SavedResult(dict):

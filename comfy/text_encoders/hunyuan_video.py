@@ -1,4 +1,4 @@
-from comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
 import vgs.submodules.comfyui.comfy.model_management
 import vgs.submodules.comfyui.comfy.text_encoders.llama
 from transformers import LlamaTokenizerFast

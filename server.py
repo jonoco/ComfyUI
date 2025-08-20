@@ -4,8 +4,8 @@ import asyncio
 import traceback
 
 from vgs.submodules.comfyui import nodes
-import folder_paths
-import execution
+from vgs.submodules.comfyui import folder_paths
+from vgs.submodules.comfyui import execution
 import uuid
 import urllib
 import json
@@ -27,7 +27,7 @@ from vgs.submodules.comfyui.comfy.cli_args import args
 import vgs.submodules.comfyui.comfy.utils
 import vgs.submodules.comfyui.comfy.model_management
 from vgs.submodules.comfyui.comfy_api import feature_flags
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 from vgs.submodules.comfyui.comfyui_version import __version__
 from vgs.submodules.comfyui.app.frontend_management import FrontendManager
 from vgs.submodules.comfyui.comfy_api.internal import _ComfyNodeInternal
@@ -36,8 +36,8 @@ from vgs.submodules.comfyui.app.user_manager import UserManager
 from vgs.submodules.comfyui.app.model_manager import ModelFileManager
 from vgs.submodules.comfyui.app.custom_node_manager import CustomNodeManager
 from typing import Optional, Union
-from api_server.routes.internal.internal_routes import InternalRoutes
-from protocol import BinaryEventTypes
+from vgs.submodules.comfyui.api_server.routes.internal.internal_routes import InternalRoutes
+from vgs.submodules.comfyui.protocol import BinaryEventTypes
 
 
 async def send_socket_catch_exception(function, message):

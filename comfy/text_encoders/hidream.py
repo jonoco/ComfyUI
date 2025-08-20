@@ -1,7 +1,7 @@
 from . import hunyuan_video
 from . import sd3_clip
-from comfy import sd1_clip
-from comfy import sdxl_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sdxl_clip
 import vgs.submodules.comfyui.comfy.model_management
 import torch
 import logging

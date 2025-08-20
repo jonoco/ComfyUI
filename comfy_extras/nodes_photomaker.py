@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import vgs.submodules.comfyui.comfy.clip_model
 import vgs.submodules.comfyui.comfy.clip_vision
 import vgs.submodules.comfyui.comfy.ops
@@ -185,4 +185,3 @@ NODE_CLASS_MAPPINGS = {
     "PhotoMakerLoader": PhotoMakerLoader,
     "PhotoMakerEncode": PhotoMakerEncode,
 }
-

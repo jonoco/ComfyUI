@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Optional, Tuple, Union, Set, Sequence, cast, NamedTuple
-from comfy_api.latest import ComfyAPI_latest
+from vgs.submodules.comfyui.comfy_api.latest import ComfyAPI_latest
 from PIL.Image import Image
 from torch import Tensor
 class ComfyAPISyncStub:

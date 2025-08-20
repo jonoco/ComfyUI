@@ -1,5 +1,5 @@
-import nodes
-import folder_paths
+from vgs.submodules.comfyui import nodes
+from vgs.submodules.comfyui import folder_paths
 
 MAX_RESOLUTION = nodes.MAX_RESOLUTION
 

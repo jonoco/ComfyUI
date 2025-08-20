@@ -4,7 +4,7 @@ import os
 import datetime
 import json
 import logging
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 
 # Get the logger instance
 logger = logging.getLogger(__name__)

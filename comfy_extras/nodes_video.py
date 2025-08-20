@@ -3,12 +3,12 @@ from __future__ import annotations
 import os
 import av
 import torch
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import json
 from typing import Optional, Literal
 from fractions import Fraction
 from vgs.submodules.comfyui.comfy.comfy_types import IO, FileLocator, ComfyNodeABC
-from comfy_api.latest import Input, InputImpl, Types
+from vgs.submodules.comfyui.comfy_api.latest import Input, InputImpl, Types
 from vgs.submodules.comfyui.comfy.cli_args import args
 
 class SaveWEBM:
@@ -237,4 +237,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GetVideoComponents": "Get Video Components",
     "LoadVideo": "Load Video",
 }
-

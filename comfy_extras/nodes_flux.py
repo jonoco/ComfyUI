@@ -1,4 +1,4 @@
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 import vgs.submodules.comfyui.comfy.utils
 
 class CLIPTextEncodeFlux:

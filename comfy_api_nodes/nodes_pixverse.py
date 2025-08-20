@@ -27,7 +27,7 @@ from comfy_api_nodes.apinode_utils import (
     validate_string,
 )
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
-from comfy_api.input_impl import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl import VideoFromFile
 
 import torch
 import aiohttp

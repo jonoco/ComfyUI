@@ -1,9 +1,9 @@
 import vgs.submodules.comfyui.comfy.sd
 import vgs.submodules.comfyui.comfy.model_sampling
 import vgs.submodules.comfyui.comfy.latent_formats
-import nodes
+from vgs.submodules.comfyui import nodes
 import torch
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 
 class LCM(vgs.submodules.comfyui.comfy.model_sampling.EPS):

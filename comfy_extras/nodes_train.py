@@ -15,9 +15,9 @@ import vgs.submodules.comfyui.comfy.samplers
 import vgs.submodules.comfyui.comfy.sd
 import vgs.submodules.comfyui.comfy.utils
 import vgs.submodules.comfyui.comfy.model_management
-import comfy_extras.nodes_custom_sampler
-import folder_paths
-import node_helpers
+from vgs.submodules.comfyui import comfy_extras.nodes_custom_sampler
+from vgs.submodules.comfyui import folder_paths
+from vgs.submodules.comfyui import node_helpers
 from vgs.submodules.comfyui.comfy.cli_args import args
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO
 from vgs.submodules.comfyui.comfy.weight_adapter import adapters, adapter_maps

@@ -5,10 +5,10 @@ import logging
 import mimetypes
 from typing import Optional, Union
 from vgs.submodules.comfyui.comfy.utils import common_upscale
-from comfy_api.input_impl import VideoFromFile
-from comfy_api.util import VideoContainer, VideoCodec
-from comfy_api.input.video_types import VideoInput
-from comfy_api.input.basic_types import AudioInput
+from vgs.submodules.comfyui.comfy_api.input_impl import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.util import VideoContainer, VideoCodec
+from vgs.submodules.comfyui.comfy_api.input.video_types import VideoInput
+from vgs.submodules.comfyui.comfy_api.input.basic_types import AudioInput
 from comfy_api_nodes.apis.client import (
     ApiClient,
     ApiEndpoint,

@@ -1,4 +1,4 @@
-from comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
 from transformers import BertTokenizer
 from .spiece_tokenizer import SPieceTokenizer
 from .bert import BertModel

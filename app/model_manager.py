@@ -5,13 +5,13 @@ import base64
 import json
 import time
 import logging
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import glob
 import vgs.submodules.comfyui.comfy.utils
 from aiohttp import web
 from PIL import Image
 from io import BytesIO
-from folder_paths import map_legacy, filter_files_extensions, filter_files_content_types
+from vgs.submodules.comfyui.folder_paths import map_legacy, filter_files_extensions, filter_files_content_types
 
 
 class ModelFileManager:

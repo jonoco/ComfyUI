@@ -47,7 +47,7 @@ from comfy_api_nodes.apinode_utils import (
     download_url_to_image_tensor,
 )
 from comfy_api_nodes.mapper_utils import model_field_to_node_input
-from comfy_api.input_impl import VideoFromFile
+from vgs.submodules.comfyui.comfy_api.input_impl import VideoFromFile
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import IO, ComfyNodeABC
 
 PATH_IMAGE_TO_VIDEO = "/proxy/runway/image_to_video"

@@ -1,4 +1,4 @@
-import nodes
+from vgs.submodules.comfyui import nodes
 import torch
 import numpy as np
 from einops import rearrange

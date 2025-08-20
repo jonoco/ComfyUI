@@ -1,4 +1,4 @@
-import nodes
+from vgs.submodules.comfyui import nodes
 import torch
 import vgs.submodules.comfyui.comfy.model_management
 import vgs.submodules.comfyui.comfy.utils

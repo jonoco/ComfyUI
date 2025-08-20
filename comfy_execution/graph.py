@@ -1,10 +1,10 @@
 from __future__ import annotations
 from typing import Type, Literal
 
-import nodes
+from vgs.submodules.comfyui import nodes
 import asyncio
 import inspect
-from comfy_execution.graph_utils import is_link, ExecutionBlocker
+from vgs.submodules.comfyui.comfy_execution.graph_utils import is_link, ExecutionBlocker
 from vgs.submodules.comfyui.comfy.comfy_types.node_typing import ComfyNodeABC, InputTypeDict, InputTypeOptions
 
 # NOTE: ExecutionBlocker code got moved to graph_utils.py to prevent torch being imported too soon during unit tests

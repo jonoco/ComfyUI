@@ -1,5 +1,5 @@
 from transformers import Qwen2Tokenizer
-from comfy import sd1_clip
+from vgs.submodules.comfyui.comfy import sd1_clip
 import vgs.submodules.comfyui.comfy.text_encoders.llama
 import os
 

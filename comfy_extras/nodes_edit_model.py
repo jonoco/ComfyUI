@@ -1,4 +1,4 @@
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 
 class ReferenceLatent:

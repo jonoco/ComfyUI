@@ -4,13 +4,13 @@ import av
 import torchaudio
 import torch
 import vgs.submodules.comfyui.comfy.model_management
-import folder_paths
+from vgs.submodules.comfyui import folder_paths
 import os
 import io
 import json
 import random
 import hashlib
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 from vgs.submodules.comfyui.comfy.cli_args import args
 from vgs.submodules.comfyui.comfy.comfy_types import FileLocator
 

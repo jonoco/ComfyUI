@@ -7,7 +7,7 @@ from vgs.submodules.comfyui.comfy.comfy_types import IO, ComfyNodeABC, InputType
 import latent_preview
 import torch
 import vgs.submodules.comfyui.comfy.utils
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 
 
 class BasicScheduler:

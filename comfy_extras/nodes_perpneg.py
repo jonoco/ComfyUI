@@ -3,7 +3,7 @@ import vgs.submodules.comfyui.comfy.model_management
 import vgs.submodules.comfyui.comfy.sampler_helpers
 import vgs.submodules.comfyui.comfy.samplers
 import vgs.submodules.comfyui.comfy.utils
-import node_helpers
+from vgs.submodules.comfyui import node_helpers
 import math
 
 def perp_neg(x, noise_pred_pos, noise_pred_neg, noise_pred_nocond, neg_scale, cond_scale):
