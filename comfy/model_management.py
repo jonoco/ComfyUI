@@ -1591,7 +1591,6 @@ def cast_to_device(tensor, device, dtype, copy=False):
 
 PINNED_MEMORY = {}
 TOTAL_PINNED_MEMORY = 0
-MAX_PINNED_MEMORY = -1
 
 def get_disk_swap_total():
     if not os.path.exists("/proc/swaps"):
@@ -1610,7 +1609,9 @@ def get_disk_swap_total():
         logging.warning("Could not get amount of swap memory on system.")
     return total
 
-if not args.disable_pinned_memory:
+def get_maxed_pinned_memory():
+    MAX_PINNED_MEMORY = -1
+    if not args.disable_pinned_memory:
     if is_nvidia() or is_amd():
         ram = get_total_memory(torch.device("cpu"))
         if WINDOWS:
@@ -1619,6 +1620,7 @@ if not args.disable_pinned_memory:
             swap = 0 if comfy.system_memory.cgroup_memory_limit() is not None else get_disk_swap_total()
             MAX_PINNED_MEMORY = max(ram * 0.40, min(ram * 0.90, ram - 4 * 1024 ** 3, ram + swap - 16 * 1024 ** 3))
         logging.info("Enabled pinned memory {}".format(MAX_PINNED_MEMORY // (1024 * 1024)))
+    return MAX_PINNED_MEMORY
 
 PINNING_ALLOWED_TYPES = set(["Tensor", "Parameter", "QuantizedTensor"])
 
@@ -1639,7 +1641,7 @@ def discard_cuda_async_error():
 
 def pin_memory(tensor):
     global TOTAL_PINNED_MEMORY
-    if MAX_PINNED_MEMORY <= 0:
+    if get_maxed_pinned_memory() <= 0:
         return False
 
     if type(tensor).__name__ not in PINNING_ALLOWED_TYPES:
@@ -1660,6 +1662,8 @@ def pin_memory(tensor):
     size = tensor.nbytes
     comfy.memory_management.extra_ram_release(comfy.memory_management.RAM_CACHE_HEADROOM)
     ensure_pin_registerable(size)
+    if (TOTAL_PINNED_MEMORY + size) > get_maxed_pinned_memory():
+        return False
 
     ptr = tensor.data_ptr()
     if ptr == 0:
@@ -1677,7 +1681,7 @@ def pin_memory(tensor):
 
 def unpin_memory(tensor):
     global TOTAL_PINNED_MEMORY
-    if MAX_PINNED_MEMORY <= 0:
+    if get_maxed_pinned_memory() <= 0:
         return False
 
     if not is_device_cpu(tensor.device):
