@@ -1336,14 +1336,16 @@ def cast_to_device(tensor, device, dtype, copy=False):
 
 PINNED_MEMORY = {}
 TOTAL_PINNED_MEMORY = 0
-MAX_PINNED_MEMORY = -1
-if not args.disable_pinned_memory:
-    if is_nvidia() or is_amd():
-        if WINDOWS:
-            MAX_PINNED_MEMORY = get_total_memory(torch.device("cpu")) * 0.40  # Windows limit is apparently 50%
-        else:
-            MAX_PINNED_MEMORY = get_total_memory(torch.device("cpu")) * 0.90
-        logging.info("Enabled pinned memory {}".format(MAX_PINNED_MEMORY // (1024 * 1024)))
+def get_maxed_pinned_memory():
+    MAX_PINNED_MEMORY = -1
+    if not args.disable_pinned_memory:
+        if is_nvidia() or is_amd():
+            if WINDOWS:
+                MAX_PINNED_MEMORY = get_total_memory(torch.device("cpu")) * 0.40  # Windows limit is apparently 50%
+            else:
+                MAX_PINNED_MEMORY = get_total_memory(torch.device("cpu")) * 0.90
+            logging.info("Enabled pinned memory {}".format(MAX_PINNED_MEMORY // (1024 * 1024)))
+    return MAX_PINNED_MEMORY
 
 PINNING_ALLOWED_TYPES = set(["Tensor", "Parameter", "QuantizedTensor"])
 
@@ -1359,7 +1361,7 @@ def discard_cuda_async_error():
 
 def pin_memory(tensor):
     global TOTAL_PINNED_MEMORY
-    if MAX_PINNED_MEMORY <= 0:
+    if get_maxed_pinned_memory() <= 0:
         return False
 
     if type(tensor).__name__ not in PINNING_ALLOWED_TYPES:
@@ -1378,7 +1380,7 @@ def pin_memory(tensor):
         return False
 
     size = tensor.nbytes
-    if (TOTAL_PINNED_MEMORY + size) > MAX_PINNED_MEMORY:
+    if (TOTAL_PINNED_MEMORY + size) > get_maxed_pinned_memory():
         return False
 
     ptr = tensor.data_ptr()
@@ -1397,7 +1399,7 @@ def pin_memory(tensor):
 
 def unpin_memory(tensor):
     global TOTAL_PINNED_MEMORY
-    if MAX_PINNED_MEMORY <= 0:
+    if get_maxed_pinned_memory() <= 0:
         return False
 
     if not is_device_cpu(tensor.device):
