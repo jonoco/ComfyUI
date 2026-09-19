@@ -755,7 +755,7 @@ def ensure_pin_budget(size, evict_active=False, loaded=False):
     return free_pins(to_free, evict_active=evict_active, loaded=loaded) >= shortfall
 
 def free_registrations(shortfall, evict_active=True):
-    if MAX_PINNED_MEMORY <= 0:
+    if get_maxed_pinned_memory() <= 0:
         return False
     if shortfall <= 0:
         return True
@@ -766,7 +766,7 @@ def free_registrations(shortfall, evict_active=True):
     return shortfall <= REGISTERABLE_PIN_HYSTERESIS
 
 def ensure_pin_registerable(size, evict_active=True):
-    return free_registrations(TOTAL_PINNED_MEMORY + size - MAX_PINNED_MEMORY, evict_active=evict_active)
+    return free_registrations(TOTAL_PINNED_MEMORY + size - get_maxed_pinned_memory(), evict_active=evict_active)
 
 class LoadedModel:
     def __init__(self, model: ModelPatcher):
@@ -1627,7 +1627,7 @@ PINNING_ALLOWED_TYPES = set(["Tensor", "Parameter", "QuantizedTensor"])
 def pinned_hostbuf_size(size):
     if args.high_ram:
         return max(0, int(size * 2))
-    return max(0, int(min(size, MAX_PINNED_MEMORY) * 2))
+    return max(0, int(min(size, get_maxed_pinned_memory()) * 2))
 
 def discard_cuda_async_error():
     try:
